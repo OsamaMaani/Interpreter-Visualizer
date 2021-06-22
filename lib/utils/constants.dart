@@ -1,2 +1,5 @@
 import 'package:flutter/material.dart';
-var max
+
+
+final ButtonStyle run_button_style =
+ElevatedButton.styleFrom();

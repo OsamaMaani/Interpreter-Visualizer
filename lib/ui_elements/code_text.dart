@@ -13,7 +13,6 @@ class CodeText extends StatelessWidget {
           autofocus: true,
           decoration: InputDecoration(
             hintText: "Write some code here and visualize!",
-
           ),
           keyboardType: TextInputType.multiline,
           expands: true,
