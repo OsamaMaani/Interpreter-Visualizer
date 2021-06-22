@@ -10,11 +10,7 @@ class CodeText extends StatelessWidget {
         keyboardType: TextInputType.multiline,
         minLines: 1,//Normal textInputField will be displayed
         maxLines: 100,//
-        // when user presses enter it will adapt to it
       ),
     );
-    // return RichText(text: TextSpan(
-    //   text: 'Hello'
-    // ),);
   }
 }

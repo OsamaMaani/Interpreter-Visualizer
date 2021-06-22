@@ -18,20 +18,26 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(
-            //  mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded( flex:4,child:CodeEditor()),
-                Expanded( flex:1,child:ConsolePanel()),
-              ],
+            Expanded(
+           //   flex: 2,
+              child: Column(
+              //  mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded( flex:3,child:CardBox(child: Container(),)),
+                  Expanded( flex:1,child:CardBox(child: Container())),
+                ],
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-               // CardBox(),
-              ],
+            Expanded(
+          //    flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(child: CardBox(child: Container())),
+                ],
+              ),
             ),
           ],
         ),
