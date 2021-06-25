@@ -1,9 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutterdesktopapp/ui_elements/TokensPage.dart';
+import 'package:flutterdesktopapp/ui_elements/first_page.dart';
 import 'package:flutterdesktopapp/ui_elements/modes_circles.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 
-class Modes extends StatelessWidget {
+class Modes extends StatefulWidget {
   const Modes({Key key}) : super(key: key);
+
+  @override
+  _ModesState createState() => _ModesState();
+}
+
+class _ModesState extends State<Modes> {
+  bool _isClicked = false;
+
+  void visualize(){
+    setState(() {
+      _isClicked = true;
+    });
+  }
+  void _back(){
+    setState(() {
+      _isClicked = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,35 +37,20 @@ class Modes extends StatelessWidget {
           SizedBox(
             width: 170,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                   _isClicked ? _back() : visualize();
+
+              },
               child: Text(
-                "Visualize",
+                     _isClicked ? "Back" :  "Visualize" ,
                 style: TextStyle(color: Colors.greenAccent),
               ),
               style: run_button_style,
             ),
           ),
+          SizedBox(height: 20.0,),
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TwoCircles(
-                  headline1: "1",
-                  title1: "Lexical Analysis",
-                  headline2: "2",
-                  title2: "Syntactic Analysis",
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                TwoCircles(
-                  headline1: "3",
-                  title1: "Semantic Analysis",
-                  headline2: "4",
-                  title2: "Full Visualization",
-                ),
-              ],
-            ),
+            child: _isClicked ? TokensPage() : PageOne(),
           ),
         ],
       ),
