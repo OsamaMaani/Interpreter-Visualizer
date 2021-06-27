@@ -6,7 +6,12 @@ class TokensPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("1111111"),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+        ),
+      ),
     );
   }
 }
