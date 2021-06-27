@@ -4,7 +4,7 @@ class Token{
   String _literal;
   String _line;
 
-  Token(this._tokenType, this._lexeme, this._line, this._literal);
+  Token(this._tokenType, this._lexeme, this._literal, this._line);
   String get tokenType => _tokenType;
 
   String get lexeme => _lexeme;
