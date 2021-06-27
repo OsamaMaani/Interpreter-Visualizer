@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:provider/provider.dart';
 
 class ReusableCircle extends StatelessWidget {
 
@@ -7,10 +9,9 @@ class ReusableCircle extends StatelessWidget {
   ReusableCircle({this.headline, this.title, this.function});
   @override
   Widget build(BuildContext context) {
+    final isVisualizedProvider = Provider.of<AppData>(context).isVisualized;
     return InkWell(
-      onTap: (){
-        function;
-      },
+      onTap:  isVisualizedProvider ? function : null ,
       child: CircleAvatar(
         radius: 150.0,
         child: Column(
