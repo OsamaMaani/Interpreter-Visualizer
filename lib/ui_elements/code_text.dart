@@ -16,10 +16,12 @@ class CodeText extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController textEditingController
                        = Provider.of<AppData>(context).editingController;
+    final appDate = Provider.of<AppData>(context);
+
     return SingleChildScrollView(
       child: SizedBox(
         height: 800,
-        child: TextField(
+        child: !appDate.isVisualized?   TextField(
           controller: textEditingController,
           autofocus: true,
           decoration: InputDecoration(
@@ -29,6 +31,16 @@ class CodeText extends StatelessWidget {
           expands: true,
           maxLines: null,
          // maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        ) :
+        RichText(
+          text: TextSpan(
+            text: 'Hello ',
+            style: DefaultTextStyle.of(context).style,
+            children: const <TextSpan>[
+              TextSpan(text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: ' world!'),
+            ],
+          ),
         ),
       ),
     );

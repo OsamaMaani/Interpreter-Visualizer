@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterdesktopapp/screens/full_visualization.dart';
 import 'package:flutterdesktopapp/screens/semantic_page.dart';
 import 'package:flutterdesktopapp/screens/syntactic_page.dart';
@@ -6,14 +9,24 @@ import 'package:flutterdesktopapp/screens/tokens_page.dart';
 import 'package:flutterdesktopapp/screens/first_page.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
+import 'package:flutterdesktopapp/utils/file_processes.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 
-class Modes extends StatelessWidget {
-  const Modes({Key key}) : super(key: key);
+class Modes extends StatefulWidget {
+  Modes({Key key}) : super(key: key);
+
+  @override
+  _ModesState createState() => _ModesState();
+}
+
+class _ModesState extends State<Modes> {
+  FileStorage fileStorage;
 
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
+  //  final progress = ProgressHUD.of(context);
 
     Widget getClickedPage() {
       if (appData.isVisualized && appData.circleOneClicked)
@@ -61,52 +74,77 @@ class Modes extends StatelessWidget {
       );
     }
 
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 40,
-            width: 190,
-            child: ElevatedButton(
-              onPressed: () {
-                if(!appData.isVisualized) {
-                  if(appData.editingController.text.isEmpty){
-                    showAlertDialog(context);
-                  }else{
-                    appData.visualize();
-                    print("Here is the code << ${appData.editingController.text} >>");
-                  }
-                }else if(appData.isVisualized && appData.circleOneClicked){
-                  appData.changeCircleOneState();
-                }else if(appData.isVisualized && appData.circleTwoClicked){
-                  appData.changeCircleTwoState();
-                }else if(appData.isVisualized && appData.circleThreeClicked){
-                  appData.changeCircleThreeState();
-                }else if(appData.isVisualized && appData.circleFourClicked){
-                  appData.changeCircleFourState();
-                }else if(appData.isVisualized && appData.editingController.text.isEmpty){
-                  showAlertDialog(context);
-                }
-              },
-              child: Text(
-                getText(),
-                style: TextStyle(
-                    color: Colors.greenAccent,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-              style: run_button_style,
+
+    Future<void> readFile() async {
+      final String response = await rootBundle.loadString('assets/tokens_file.txt');
+      print(response);
+    }
+
+    void compile(var progress){
+      progress.showWithText("Compiling ...");
+      readFile().then((value) {
+        Timer(Duration(seconds: 5),(){
+          appData.visualize();
+          progress.dismiss();
+        });
+      });
+      print("Here is the code << ${appData.editingController.text} >>");
+    }
+
+    return ProgressHUD(
+      child: Builder(
+        builder: (context){
+          return Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 40,
+                  width: 190,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final progress = ProgressHUD.of(context);
+                      if(!appData.isVisualized) {
+                        if(appData.editingController.text.isEmpty){
+                          showAlertDialog(context);
+                        }else{
+                          compile(progress);
+                        }
+                      }else if(appData.isVisualized && appData.circleOneClicked){
+                        appData.changeCircleOneState();
+                      }else if(appData.isVisualized && appData.circleTwoClicked){
+                        appData.changeCircleTwoState();
+                      }else if(appData.isVisualized && appData.circleThreeClicked){
+                        appData.changeCircleThreeState();
+                      }else if(appData.isVisualized && appData.circleFourClicked){
+                        appData.changeCircleFourState();
+                      }else if(appData.isVisualized && appData.editingController.text.isEmpty){
+                        showAlertDialog(context);
+                      }else{
+                        compile(progress);
+                      }
+                    },
+                    child: Text(
+                      getText(),
+                      style: TextStyle(
+                          color: Colors.greenAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    style: run_button_style,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Expanded(
+                  child: getClickedPage(),
+                ),
+              ],
             ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Expanded(
-            child: getClickedPage(),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
