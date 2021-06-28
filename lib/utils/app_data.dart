@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutterdesktopapp/models/tokens.dart';
 
 class AppData with ChangeNotifier{
 
@@ -9,6 +10,16 @@ class AppData with ChangeNotifier{
    bool _circleThreeClicked = false;
    bool _circleFourClicked = false;
 
+   List<Token> _list = [
+      Token("operator", "+", "null", "1"),
+      Token("operator", "+", "null", "1"),
+      Token("operator", "+", "null", "1"),
+      Token("operator", "+", "null", "1"),
+      Token("operator", "+", "null", "1"),
+      Token("operator", "+", "null", "1"),
+      Token("operator", "+", "null", "1"),];
+
+   TextEditingController _editingController = TextEditingController();
 
    void changeCircleOneState(){
       if(_cirlcleOneClicked){
@@ -50,13 +61,25 @@ class AppData with ChangeNotifier{
       notifyListeners();
    }
 
+
+   //For testing purposes.
+   void addToken(Token token){
+      list.add(token);
+      notifyListeners();
+   }
+
+
    bool get circleOneClicked => _cirlcleOneClicked;
 
-   bool get isVisualized => _isVisualized;
-
-   bool get circleFourClicked => _circleFourClicked;
+   bool get circleTwoClicked => _circleTwoClicked;
 
    bool get circleThreeClicked => _circleThreeClicked;
 
-   bool get circleTwoClicked => _circleTwoClicked;
+   bool get circleFourClicked => _circleFourClicked;
+
+   bool get isVisualized => _isVisualized;
+   //For testing purposes
+   List<Token> get list => _list;
+
+   TextEditingController get editingController => _editingController;
 }

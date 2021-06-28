@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutterdesktopapp/ui_elements/full_visualization.dart';
-import 'package:flutterdesktopapp/ui_elements/semantic_page.dart';
-import 'package:flutterdesktopapp/ui_elements/syntactic_page.dart';
-import 'package:flutterdesktopapp/ui_elements/tokens_page.dart';
-import 'package:flutterdesktopapp/ui_elements/first_page.dart';
+import 'package:flutterdesktopapp/screens/full_visualization.dart';
+import 'package:flutterdesktopapp/screens/semantic_page.dart';
+import 'package:flutterdesktopapp/screens/syntactic_page.dart';
+import 'package:flutterdesktopapp/screens/tokens_page.dart';
+import 'package:flutterdesktopapp/screens/first_page.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:provider/provider.dart';
 
-class Modes extends StatefulWidget {
+class Modes extends StatelessWidget {
   const Modes({Key key}) : super(key: key);
 
-  @override
-  _ModesState createState() => _ModesState();
-}
-
-class _ModesState extends State<Modes> {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
@@ -41,6 +36,31 @@ class _ModesState extends State<Modes> {
       else return "Visualize";
     }
 
+    void showAlertDialog(BuildContext context){
+
+      Widget okButton = ElevatedButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+
+      AlertDialog alert = AlertDialog(
+        title: Text("Notice"),
+        content: Text("Please, write down some code before attempting to visualize!"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +72,12 @@ class _ModesState extends State<Modes> {
             child: ElevatedButton(
               onPressed: () {
                 if(!appData.isVisualized) {
-                  appData.visualize();
+                  if(appData.editingController.text.isEmpty){
+                    showAlertDialog(context);
+                  }else{
+                    appData.visualize();
+                    print("Here is the code << ${appData.editingController.text} >>");
+                  }
                 }else if(appData.isVisualized && appData.circleOneClicked){
                   appData.changeCircleOneState();
                 }else if(appData.isVisualized && appData.circleTwoClicked){
@@ -61,6 +86,8 @@ class _ModesState extends State<Modes> {
                   appData.changeCircleThreeState();
                 }else if(appData.isVisualized && appData.circleFourClicked){
                   appData.changeCircleFourState();
+                }else if(appData.isVisualized && appData.editingController.text.isEmpty){
+                  showAlertDialog(context);
                 }
               },
               child: Text(

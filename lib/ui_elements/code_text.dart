@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:provider/provider.dart';
 
 class CodeText extends StatelessWidget {
-  const CodeText({Key key}) : super(key: key);
+  CodeText({Key key}) : super(key: key);
+
+
+
+  void addingToTheList(){
+
+  }
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController textEditingController
+                       = Provider.of<AppData>(context).editingController;
     return SingleChildScrollView(
       child: SizedBox(
-        height: 700,
+        height: 800,
         child: TextField(
+          controller: textEditingController,
           autofocus: true,
           decoration: InputDecoration(
             hintText: "Write some code here and visualize!",

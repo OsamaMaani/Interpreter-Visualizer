@@ -1,44 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/ui_elements/card_box.dart';
+import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 class TokensPage extends StatelessWidget {
   TokensPage({Key key}) : super(key: key);
 
-  final List<Token> tokenList = [
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-    Token("operator", "+", "null", "1"),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Token> tokenList = Provider.of<AppData>(context).list;
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

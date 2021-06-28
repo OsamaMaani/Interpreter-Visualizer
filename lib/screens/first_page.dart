@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:provider/provider.dart';
 
-import 'modes_circles.dart';
+import '../ui_elements/modes_circles.dart';
 
 class PageOne extends StatelessWidget {
   const PageOne({Key key}) : super(key: key);
