@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 class CodeText extends StatelessWidget {
   CodeText({Key key}) : super(key: key);
 
-
-
   void addingToTheList(){
 
   }
@@ -20,8 +18,8 @@ class CodeText extends StatelessWidget {
 
     return SingleChildScrollView(
       child: SizedBox(
-        height: 800,
-        child: !appDate.isVisualized?   TextField(
+       height: 800,
+        child:  TextField(
           controller: textEditingController,
           autofocus: true,
           decoration: InputDecoration(
@@ -30,8 +28,22 @@ class CodeText extends StatelessWidget {
           keyboardType: TextInputType.multiline,
           expands: true,
           maxLines: null,
-         // maxLengthEnforcement: MaxLengthEnforcement.enforced,
-        ) :
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+/*
+(appDate.isVisualized && appDate.circleOneClicked) ?
         RichText(
           text: TextSpan(
             text: 'Hello ',
@@ -41,8 +53,5 @@ class CodeText extends StatelessWidget {
               TextSpan(text: ' world!'),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
+        ):
+ */

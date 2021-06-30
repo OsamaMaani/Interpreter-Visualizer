@@ -23,16 +23,18 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
+                  flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded( flex:3,child:CardBox(child: CodeText(),)),
-                      Expanded( flex:1,child:CardBox(child: Container())),
+                      Expanded( flex:3, child:CardBox(child: CodeText(),)),
+                      Expanded( flex:1, child:CardBox(child: Container())),
                     ],
                   ),
                 ),
                 Expanded(
+                  flex: 1,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.start,
