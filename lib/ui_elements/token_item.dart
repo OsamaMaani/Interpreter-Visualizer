@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
-
 import 'card_box.dart';
 
 class TokenItem extends StatefulWidget {
