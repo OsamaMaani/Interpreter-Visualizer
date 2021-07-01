@@ -28,7 +28,6 @@ class _ModesState extends State<Modes> {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
-  //  final progress = ProgressHUD.of(context);
 
     Widget getClickedPage() {
       if (appData.isVisualized && appData.circleOneClicked)
@@ -111,7 +110,6 @@ class _ModesState extends State<Modes> {
               break;
             }
           }
-
           appData.list.add(Token(line.substring(start1,end1), line.substring(start2,end2),"sfd","fsd"));
           // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
           //print("added to the list");

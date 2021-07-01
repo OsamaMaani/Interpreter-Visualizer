@@ -11,8 +11,3 @@ x identifier 1
 print identifier 1
 + jk 1
 - gfd 1
-
-
-
-
-

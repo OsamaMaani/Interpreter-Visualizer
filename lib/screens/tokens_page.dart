@@ -1,36 +1,46 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/ui_elements/card_box.dart';
+import 'package:flutterdesktopapp/ui_elements/token_item.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:provider/provider.dart';
 
-class TokensPage extends StatefulWidget {
+class TokensPage extends StatelessWidget {
   TokensPage({Key key}) : super(key: key);
 
-  @override
-  _TokensPageState createState() => _TokensPageState();
-}
+  DateTime lastRender;
 
-class _TokensPageState extends State<TokensPage> {
+  get _duration {
+    var now = DateTime.now();
+    var defaultDelay = Duration(seconds: 5);
+    Duration delay;
+     print("Hello Guys!");
+    if (lastRender == null) {
+      lastRender = now;
+      delay = defaultDelay;
+    } else {
 
+      var difference = now.difference(lastRender);
+      if (difference > defaultDelay) {
+        lastRender = now;
+        delay = defaultDelay;
+      } else {
+        var durationOffcet = difference - defaultDelay;
+        delay = defaultDelay + (-durationOffcet);
 
+        lastRender = now.add(-durationOffcet);
+      }
+      return delay;
+    }
 
+    return defaultDelay;
+  }
 
   @override
   Widget build(BuildContext context) {
     final List<Token> tokenList = Provider.of<AppData>(context).list;
-    List<Token> tokenToView;
-
-    // setState(() {
-    //   Timer(Duration(seconds: 2),(){
-    //     tokenToView.add(tokenList[i]);
-    //   });
-    // });
-
 
     return Container(
       child: Column(
@@ -66,33 +76,7 @@ class _TokensPageState extends State<TokensPage> {
             child: ListView.builder(
               itemCount: tokenList.length,
               itemBuilder: (_, index) {
-                return CardBox(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        child: Container(
-                            child: Text("${tokenList[index].tokenType}")),
-                        width: 80.0,
-                      ),
-                      SizedBox(
-                        child: Container(
-                            child: Text("${tokenList[index].lexeme}")),
-                        width: 80.0,
-                      ),
-                      SizedBox(
-                        child: Container(
-                            child: Text("${tokenList[index].literal}")),
-                        width: 80.0,
-                      ),
-                      SizedBox(
-                        child:
-                            Container(child: Text("${tokenList[index].line}")),
-                        width: 80.0,
-                      ),
-                    ],
-                  ),
-                );
+                return TokenItem(_duration, tokenList, index);
               },
             ),
           )
