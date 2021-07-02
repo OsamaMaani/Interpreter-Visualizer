@@ -28,7 +28,6 @@ class _ModesState extends State<Modes> {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
-  //  final progress = ProgressHUD.of(context);
 
     Widget getClickedPage() {
       if (appData.isVisualized && appData.circleOneClicked)
