@@ -86,33 +86,8 @@ class _ModesState extends State<Modes> {
       progress.showWithText("Compiling ...");
       readFile().then((value) {
         LineSplitter.split(value).forEach((line){
-          int start1 =0 ;
-          int end1 =0;
-          int start2=0;
-          int end2= 0;
-          int i;
-
-          for(i =0; i< line.length ;i++){
-            //print("11111111");
-            //print(line[i]);
-            if(line[i] == " "){
-              end1 = i;
-              start2= ++i;
-              break;
-            }
-          }
-
-          //print("**********************");
-          for(i; i<line.length ;i++){
-            //print("2222222222");
-            //print(line[i]);
-            if(line[i] == " "){
-              end2 = i;
-              break;
-            }
-          }
-
-          appData.list.add(Token(line.substring(start1,end1), line.substring(start2,end2),"sfd","fsd"));
+          var splitted_list = line.split(",");
+          appData.list.add(Token(splitted_list[0],splitted_list[1],"sfd","fsd"));
           // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
           //print("added to the list");
         });

@@ -14,7 +14,7 @@ class CodeText extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController textEditingController
                        = Provider.of<AppData>(context).editingController;
-    final appDate = Provider.of<AppData>(context);
+    //final appDate = Provider.of<AppData>(context);
 
     return SingleChildScrollView(
       child: SizedBox(

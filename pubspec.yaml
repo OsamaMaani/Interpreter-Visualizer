@@ -31,6 +31,7 @@ dependencies:
   provider: ^5.0.0
   path_provider: ^2.0.2
   flutter_progress_hud: ^2.0.0
+  dynamic_text_highlighting: ^2.2.0
 
 dev_dependencies:
   flutter_test:
