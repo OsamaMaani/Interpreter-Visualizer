@@ -10,15 +10,14 @@ class AppData with ChangeNotifier{
    bool _circleThreeClicked = false;
    bool _circleFourClicked = false;
 
-   List<Token> _list = [
-      Token("operator", "+", "null", "1"),
-      Token("operator", "+", "null", "1"),
-      Token("operator", "+", "null", "1"),
-      Token("operator", "+", "null", "1"),
-      Token("operator", "+", "null", "1"),
-      Token("operator", "+", "null", "1"),
-      Token("operator", "+", "null", "1"),];
+   List<Token> _list = [];
+   List _richTextList = [];
 
+   set richTextList(List value) {
+    _richTextList = value;
+  }
+
+  List get richTextList => _richTextList;
    TextEditingController _editingController = TextEditingController();
 
    void changeCircleOneState(){

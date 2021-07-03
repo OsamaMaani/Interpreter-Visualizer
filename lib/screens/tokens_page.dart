@@ -16,7 +16,6 @@ class TokensPage extends StatelessWidget {
     var now = DateTime.now();
     var defaultDelay = Duration(seconds: 1);
     Duration delay;
-     print("Hello Guys!");
     if (lastRender == null) {
       lastRender = now;
       delay = defaultDelay;

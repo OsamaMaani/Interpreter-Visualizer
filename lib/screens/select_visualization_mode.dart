@@ -30,28 +30,32 @@ class _ModesState extends State<Modes> {
     final appData = Provider.of<AppData>(context);
 
     Widget getClickedPage() {
-      if (appData.isVisualized && appData.circleOneClicked)
+      if (appData.isVisualized && appData.circleOneClicked){
+
         return TokensPage();
+      }
       else if (appData.isVisualized && appData.circleTwoClicked)
         return SyntacticPage();
-      else if(appData.isVisualized && appData.circleThreeClicked)
+      else if (appData.isVisualized && appData.circleThreeClicked)
         return SemanticPage();
-      else if(appData.isVisualized && appData.circleFourClicked)
+      else if (appData.isVisualized && appData.circleFourClicked)
         return FullVisualization();
 
       return PageOne();
     }
 
-    String getText(){
-      if(appData.isVisualized && (appData.circleOneClicked
-          || appData.circleTwoClicked
-          || appData.circleThreeClicked
-          || appData.circleFourClicked)) return "Back";
-      else return "Visualize";
+    String getText() {
+      if (appData.isVisualized &&
+          (appData.circleOneClicked ||
+              appData.circleTwoClicked ||
+              appData.circleThreeClicked ||
+              appData.circleFourClicked))
+        return "Back";
+      else
+        return "Visualize";
     }
 
-    void showAlertDialog(BuildContext context){
-
+    void showAlertDialog(BuildContext context) {
       Widget okButton = ElevatedButton(
         child: Text("OK"),
         onPressed: () {
@@ -61,7 +65,8 @@ class _ModesState extends State<Modes> {
 
       AlertDialog alert = AlertDialog(
         title: Text("Notice"),
-        content: Text("Please, write down some code before attempting to visualize!"),
+        content: Text(
+            "Please, write down some code before attempting to visualize!"),
         actions: [
           okButton,
         ],
@@ -75,21 +80,50 @@ class _ModesState extends State<Modes> {
       );
     }
 
-
     Future<String> readFile() async {
       final String data = await rootBundle.loadString('assets/tokens_file.txt');
       return data;
     }
 
-    void compile(var progress){
+    void compile(var progress) {
+      var sourceCode = appData.editingController.text;
       progress.showWithText("Compiling ...");
       readFile().then((value) {
-        LineSplitter.split(value).forEach((line){
-          var splitted_list = line.split(",");
-          appData.list.add(Token(splitted_list[0],splitted_list[1],"sfd","fsd"));
+        var richTextList = [];
+        int counter = 0, lastEnd, shift = 0;
+        LineSplitter.split(value).forEach((line) {
+          print(" here is the $line");
+          var splittedList = line.split(",");
+
+          if (splittedList[0] != "EOF") {
+            var start = int.parse(splittedList[4]) - shift;
+            var end = int.parse(splittedList[5]) - shift;
+            if (counter > 0) {
+              var betweenText = sourceCode.substring(lastEnd + 1, start);
+              if(betweenText.length > 1 && betweenText[0] == "\n"){
+                betweenText = "\n";
+                shift++;
+                start--;
+                end--;
+              }
+              richTextList.add([betweenText, Colors.black, 0]);
+            }
+            // print("RichText  : "+(richTextList.length > 0 ? richTextList.last : ""));
+            var tokenText = sourceCode.substring(start, end + 1);
+            richTextList.add([tokenText, Colors.black, 1]);
+
+            lastEnd = end;
+          }
+          counter++;
+
+          appData.list
+              .add(Token(splittedList[0], splittedList[1], splittedList[2], int.parse(splittedList[3]), int.parse(splittedList[4]), int.parse(splittedList[5])));
           // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
           //print("added to the list");
         });
+
+        for (var x in richTextList) print(x[0]);
+        appData.richTextList = richTextList;
         appData.visualize();
         progress.dismiss();
       });
@@ -99,7 +133,7 @@ class _ModesState extends State<Modes> {
 
     return ProgressHUD(
       child: Builder(
-        builder: (context){
+        builder: (context) {
           return Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,23 +145,28 @@ class _ModesState extends State<Modes> {
                   child: ElevatedButton(
                     onPressed: () {
                       final progress = ProgressHUD.of(context);
-                      if(!appData.isVisualized) {
-                        if(appData.editingController.text.isEmpty){
+                      if (!appData.isVisualized) {
+                        if (appData.editingController.text.isEmpty) {
                           showAlertDialog(context);
-                        }else{
+                        } else {
                           compile(progress);
                         }
-                      }else if(appData.isVisualized && appData.circleOneClicked){
+                      } else if (appData.isVisualized &&
+                          appData.circleOneClicked) {
                         appData.changeCircleOneState();
-                      }else if(appData.isVisualized && appData.circleTwoClicked){
+                      } else if (appData.isVisualized &&
+                          appData.circleTwoClicked) {
                         appData.changeCircleTwoState();
-                      }else if(appData.isVisualized && appData.circleThreeClicked){
+                      } else if (appData.isVisualized &&
+                          appData.circleThreeClicked) {
                         appData.changeCircleThreeState();
-                      }else if(appData.isVisualized && appData.circleFourClicked){
+                      } else if (appData.isVisualized &&
+                          appData.circleFourClicked) {
                         appData.changeCircleFourState();
-                      }else if(appData.isVisualized && appData.editingController.text.isEmpty){
+                      } else if (appData.isVisualized &&
+                          appData.editingController.text.isEmpty) {
                         showAlertDialog(context);
-                      }else{
+                      } else {
                         compile(progress);
                       }
                     },

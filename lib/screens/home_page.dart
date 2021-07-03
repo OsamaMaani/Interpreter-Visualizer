@@ -4,7 +4,6 @@ import 'package:flutterdesktopapp/screens/select_visualization_mode.dart';
 import 'package:flutterdesktopapp/ui_elements/card_box.dart';
 import 'package:flutterdesktopapp/ui_elements/code_text.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
-import 'package:flutterdesktopapp/utils/code_modifier.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {

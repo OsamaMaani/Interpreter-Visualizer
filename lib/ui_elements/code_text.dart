@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutterdesktopapp/ui_elements/text_highlighter.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:provider/provider.dart';
 
@@ -12,15 +13,16 @@ class CodeText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController textEditingController
-                       = Provider.of<AppData>(context).editingController;
-    //final appDate = Provider.of<AppData>(context);
+
+    final appData = Provider.of<AppData>(context);
 
     return SingleChildScrollView(
       child: SizedBox(
        height: 800,
-        child:  TextField(
-          controller: textEditingController,
+        width: 1200,
+        child: (appData.isVisualized && appData.circleOneClicked) ?  TextHighlighter() :
+        TextField(
+          controller: appData.editingController,
           autofocus: true,
           decoration: InputDecoration(
             hintText: "Write some code here and visualize!",
