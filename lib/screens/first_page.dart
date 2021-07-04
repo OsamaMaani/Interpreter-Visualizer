@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdesktopapp/components/resusable_circle.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:provider/provider.dart';
 
@@ -6,7 +7,6 @@ import '../ui_elements/modes_circles.dart';
 
 class PageOne extends StatelessWidget {
   const PageOne({Key key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +24,15 @@ class PageOne extends StatelessWidget {
           function2: appData.changeCircleTwoState,
         ),
         SizedBox(
-          height: 50,
+          height: 10,
         ),
-        TwoCircles(
-          headline1: "3",
-          title1: "Semantic Analysis",
-          function1: appData.changeCircleThreeState,
-          headline2: "4",
-          title2: "Full Visualization",
-          function2: appData.changeCircleFourState,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30.0),
+          child: ReusableCircle(
+            headline: "3",
+            title: "Semantic Analysis & Execution",
+            function: appData.changeCircleThreeState,
+          ),
         ),
       ],
     );

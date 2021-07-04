@@ -200,7 +200,7 @@ class _ModesState extends State<Modes> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 30.0,
                 ),
                 Expanded(
                   child: getClickedPage(),
