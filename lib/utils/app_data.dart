@@ -9,12 +9,33 @@ class AppData with ChangeNotifier{
    bool _circleTwoClicked = false;
    bool _circleThreeClicked = false;
    bool _circleFourClicked = false;
+   bool _tokensChange = false;
 
-   List<Token> _list = [];
-   List _richTextList = [];
 
-   set richTextList(List value) {
+  void refreshTokensChange(){
+     _tokensChange = !_tokensChange;
+     notifyListeners();
+  }
+
+  bool get tokensChange => _tokensChange;
+  List<Token> _tokensList = [];
+
+   List<Token> get tokensList => _tokensList;
+
+  List _richTextList = [];
+   List _tokensColors = [];
+
+
+   List get tokensColors => _tokensColors;
+
+   set tokensColors(List value) {
+    _tokensColors = value;
+    notifyListeners();
+  }
+
+  set richTextList(List value) {
     _richTextList = value;
+    notifyListeners();
   }
 
   List get richTextList => _richTextList;
@@ -63,7 +84,7 @@ class AppData with ChangeNotifier{
 
    //For testing purposes.
    void addToken(Token token){
-      list.add(token);
+     _tokensList.add(token);
       notifyListeners();
    }
 
@@ -77,8 +98,7 @@ class AppData with ChangeNotifier{
    bool get circleFourClicked => _circleFourClicked;
 
    bool get isVisualized => _isVisualized;
-   //For testing purposes
-   List<Token> get list => _list;
+
 
    TextEditingController get editingController => _editingController;
 }

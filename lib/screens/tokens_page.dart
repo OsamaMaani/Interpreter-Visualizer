@@ -14,7 +14,7 @@ class TokensPage extends StatelessWidget {
 
   get _duration {
     var now = DateTime.now();
-    var defaultDelay = Duration(seconds: 1);
+    var defaultDelay = Duration(seconds: 2);
     Duration delay;
     if (lastRender == null) {
       lastRender = now;
@@ -39,7 +39,7 @@ class TokensPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Token> tokenList = Provider.of<AppData>(context).list;
+    final List<Token> tokenList = Provider.of<AppData>(context).tokensList;
 
     return Container(
       child: Column(

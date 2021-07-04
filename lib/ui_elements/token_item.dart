@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
+import 'package:flutterdesktopapp/ui_elements/text_highlighter.dart';
+import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:provider/provider.dart';
 import 'card_box.dart';
 
 class TokenItem extends StatefulWidget {
@@ -16,6 +20,7 @@ class TokenItem extends StatefulWidget {
 class _TokenItemState extends State<TokenItem>
     with SingleTickerProviderStateMixin {
   Animation<double> animation;
+  Animation<Color> animation1;
   AnimationController animationController;
 
   bool visible = false;
@@ -29,6 +34,13 @@ class _TokenItemState extends State<TokenItem>
     );
 
     animation = Tween(begin: 0.0, end: 1.0).animate(animationController);
+
+    var appdata = Provider.of<AppData>(context, listen: false);
+    print(widget.index);
+    print(appdata.tokensColors[widget.index]);
+
+    animation1 = ColorTween(begin: Colors.black, end: appdata.tokensColors[widget.index])
+        .animate(animationController);
     animation.addStatusListener((status) {
       setState(() {});
     });
@@ -44,6 +56,11 @@ class _TokenItemState extends State<TokenItem>
 
   @override
   Widget build(BuildContext context) {
+    var appdata = Provider.of<AppData>(context);
+    appdata.richTextList[widget.index][1]=animation1.value;
+    var temp = List.from(appdata.richTextList);
+    //appdata.richTextList = temp;
+
     return Opacity(
       opacity: animation.value,
       child: CardBox(

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Token{
   String _tokenType;
   String _lexeme;
@@ -5,9 +7,14 @@ class Token{
   int _line;
   int _start;
   int _end;
+  Color _color;
+
+  Color get color => _color;
 
   Token(this._tokenType, this._lexeme, this._literal, this._line, this._start,
-      this._end);
+      this._end, int category){
+    this._color = getTokenColor(category);
+  }
 
   String get tokenType => _tokenType;
 
@@ -20,4 +27,14 @@ class Token{
   int get end => _end;
 
   int get start => _start;
+
+  Color getTokenColor(var tokenType){
+    switch(tokenType){
+      case 1: return Colors.blue;break;
+      case 2: return Colors.green;break;
+      case 3: return Colors.purple;break;
+      case 4: return Colors.yellow;break;
+      default: return Colors.black;
+    }
+  }
 }

@@ -4,42 +4,42 @@ import 'package:flutterdesktopapp/ui_elements/text_highlighter.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:provider/provider.dart';
 
-class CodeText extends StatelessWidget {
+class CodeText extends StatefulWidget {
   CodeText({Key key}) : super(key: key);
 
-  void addingToTheList(){
+  @override
+  _CodeTextState createState() => _CodeTextState();
+}
 
+class _CodeTextState extends State<CodeText> {
+  void refresh() {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-
-    final appData = Provider.of<AppData>(context);
+    final appData = Provider.of<AppData>(context, listen: true);
 
     return SingleChildScrollView(
       child: SizedBox(
-       height: 800,
+        height: 800,
         width: 1200,
-        child: (appData.isVisualized && appData.circleOneClicked) ?  TextHighlighter() :
-        TextField(
-          controller: appData.editingController,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: "Write some code here and visualize!",
-          ),
-          keyboardType: TextInputType.multiline,
-          expands: true,
-          maxLines: null,
-        ),
+        child: ((appData.isVisualized && appData.circleOneClicked))
+            ? TextHighlighter()
+            : TextField(
+                controller: appData.editingController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: "Write some code here and visualize!",
+                ),
+                keyboardType: TextInputType.multiline,
+                expands: true,
+                maxLines: null,
+              ),
       ),
     );
   }
 }
-
-
-
-
-
 
 
 

@@ -89,10 +89,10 @@ class _ModesState extends State<Modes> {
       var sourceCode = appData.editingController.text;
       progress.showWithText("Compiling ...");
       readFile().then((value) {
-        var richTextList = [];
+        var richTextList = [], tokensColors = [];
         int counter = 0, lastEnd, shift = 0;
         LineSplitter.split(value).forEach((line) {
-          print(" here is the $line");
+          // print(" here is the $line");
           var splittedList = line.split(",");
 
           if (splittedList[0] != "EOF") {
@@ -107,23 +107,36 @@ class _ModesState extends State<Modes> {
                 end--;
               }
               richTextList.add([betweenText, Colors.black, 0]);
+              tokensColors.add(Colors.black);
             }
             // print("RichText  : "+(richTextList.length > 0 ? richTextList.last : ""));
+
             var tokenText = sourceCode.substring(start, end + 1);
+
+
+
             richTextList.add([tokenText, Colors.black, 1]);
 
             lastEnd = end;
           }
           counter++;
 
-          appData.list
-              .add(Token(splittedList[0], splittedList[1], splittedList[2], int.parse(splittedList[3]), int.parse(splittedList[4]), int.parse(splittedList[5])));
+          appData.tokensList
+              .add(Token(splittedList[0], splittedList[1], splittedList[2], int.parse(splittedList[3]), int.parse(splittedList[4]), int.parse(splittedList[5]), int.parse(splittedList[6])));
+
+          print(tokensColors.length);
+          tokensColors.add(appData.tokensList.last.color);
+
           // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
           //print("added to the list");
         });
 
-        for (var x in richTextList) print(x[0]);
+        // for (var x in tokensColors){
+        //   if(x != Colors.black)print(x);
+        // }
+
         appData.richTextList = richTextList;
+        appData.tokensColors = tokensColors;
         appData.visualize();
         progress.dismiss();
       });
