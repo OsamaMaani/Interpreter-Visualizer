@@ -15,6 +15,11 @@ var text_style_highlight = TextStyle(
     backgroundColor: Colors.yellow,
 );
 
+var text_style_circle = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 20.0,
+    color: Colors.white
+);
 
 var text_style_table_row = TextStyle(
     fontWeight: FontWeight.bold,
