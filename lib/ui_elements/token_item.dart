@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/ui_elements/text_highlighter.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'card_box.dart';
 
@@ -20,7 +21,7 @@ class TokenItem extends StatefulWidget {
 class _TokenItemState extends State<TokenItem>
     with SingleTickerProviderStateMixin {
   Animation<double> animation;
-  Animation<Color> animation1;
+  Animation<Color> animationColor;
   AnimationController animationController;
 
   bool visible = false;
@@ -38,11 +39,13 @@ class _TokenItemState extends State<TokenItem>
     var appdata = Provider.of<AppData>(context, listen: false);
 
     var tokenIndex = appdata.tokensIndices[widget.index];
-    animation1 = ColorTween(begin: Colors.black, end: appdata.tokensColors[tokenIndex])
-        .animate(animationController);
+    var tokenGoalColor = appdata.tokensColors[tokenIndex];
+    animationColor = ColorTween(begin: Colors.black, end: tokenGoalColor).animate(animationController);
+
     animation.addStatusListener((status) {
       setState(() {});
     });
+
     animationController.forward();
     super.initState();
   }
@@ -57,9 +60,10 @@ class _TokenItemState extends State<TokenItem>
   Widget build(BuildContext context) {
     var appdata = Provider.of<AppData>(context);
     var tokenIndex = appdata.tokensIndices[widget.index];
+    var tokenGoalColor = appdata.tokensColors[tokenIndex];
 
     if(tokenIndex < appdata.richTextList.length) {
-      appdata.richTextList[tokenIndex][1] = animation1.value;
+      appdata.richTextList[tokenIndex][1] = (animationColor.value == tokenGoalColor ? animationColor.value : Colors.black);
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -67,33 +71,36 @@ class _TokenItemState extends State<TokenItem>
       appdata.richTextList = temp;
     });
 
-    return Opacity(
-      opacity: animation.value,
+    return Visibility(
+      visible: (animation.value == 1.0 ? true : false),
       child: CardBox(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              child: Container(
-                  child: Text("${widget.tokenList[widget.index].tokenType}")),
-              width: 80.0,
-            ),
-            SizedBox(
-              child: Container(
-                  child: Text("${widget.tokenList[widget.index].lexeme}")),
-              width: 80.0,
-            ),
-            SizedBox(
-              child: Container(
-                  child: Text("${widget.tokenList[widget.index].literal}")),
-              width: 80.0,
-            ),
-            SizedBox(
-              child: Container(
-                  child: Text("${widget.tokenList[widget.index].line}")),
-              width: 80.0,
-            ),
-          ],
+        child: Container(
+          color: animationColor.value,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                child: Container(
+                    child: Text("${widget.tokenList[widget.index].tokenType}", style: text_style_table_row)),
+                width: 125.0,
+              ),
+              SizedBox(
+                child: Container(
+                    child: Text("${widget.tokenList[widget.index].lexeme}", style: text_style_table_row)),
+                width: 80.0,
+              ),
+              SizedBox(
+                child: Container(
+                    child: Text("${widget.tokenList[widget.index].literal}", style: text_style_table_row)),
+                width: 80.0,
+              ),
+              SizedBox(
+                child: Container(
+                    child: Text("${widget.tokenList[widget.index].line}", style: text_style_table_row)),
+                width: 80.0,
+              ),
+            ],
+          ),
         ),
       ),
     );

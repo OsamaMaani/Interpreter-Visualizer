@@ -30,11 +30,11 @@ class Token{
 
   Color getTokenColor(var tokenType){
     switch(tokenType){
-      case 1: return Colors.blue;break;
-      case 2: return Colors.green;break;
-      case 3: return Colors.purple;break;
-      case 4: return Colors.yellow;break;
-      default: return Colors.black;
+      case 1: return Colors.teal;break;
+      case 2: return Colors.greenAccent;break;
+      case 3: return Colors.amberAccent;break;
+      case 4: return Colors.blueAccent;break;
+      default: return Colors.grey;
     }
   }
 }

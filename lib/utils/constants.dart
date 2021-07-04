@@ -16,3 +16,9 @@ var text_style_highlight = TextStyle(
 );
 
 
+var text_style_table_row = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 14.0,
+    color: Colors.black,
+);
+
