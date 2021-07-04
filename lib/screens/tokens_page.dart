@@ -59,7 +59,7 @@ class _TokensPageState extends State<TokensPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "TokenType",
+                    "Token Type",
                     style: text_style_table,
                   ),
                   Text(

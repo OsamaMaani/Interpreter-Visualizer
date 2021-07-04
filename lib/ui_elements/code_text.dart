@@ -19,7 +19,8 @@ class _CodeTextState extends State<CodeText> {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context, listen: true);
-
+    final initial_code = "var x = 3;\nvar y = 10;\nprint 5 + 3;";
+    appData.editingController.text = initial_code;
     return SingleChildScrollView(
       child: SizedBox(
         height: 800,

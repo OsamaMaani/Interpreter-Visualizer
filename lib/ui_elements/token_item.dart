@@ -6,6 +6,7 @@ import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'card_box.dart';
+import 'colored_card_box.dart';
 
 class TokenItem extends StatefulWidget {
   const TokenItem(this.duration, this.tokenList, this.index);
@@ -73,34 +74,32 @@ class _TokenItemState extends State<TokenItem>
 
     return Visibility(
       visible: (animation.value == 1.0 ? true : false),
-      child: CardBox(
-        child: Container(
-          color: animationColor.value,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                child: Container(
-                    child: Text("${widget.tokenList[widget.index].tokenType}", style: text_style_table_row)),
-                width: 125.0,
-              ),
-              SizedBox(
-                child: Container(
-                    child: Text("${widget.tokenList[widget.index].lexeme}", style: text_style_table_row)),
-                width: 80.0,
-              ),
-              SizedBox(
-                child: Container(
-                    child: Text("${widget.tokenList[widget.index].literal}", style: text_style_table_row)),
-                width: 80.0,
-              ),
-              SizedBox(
-                child: Container(
-                    child: Text("${widget.tokenList[widget.index].line}", style: text_style_table_row)),
-                width: 80.0,
-              ),
-            ],
-          ),
+      child: ColoredCardBox(
+        color: animationColor.value,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              child: Container(
+                  child: Text("${widget.tokenList[widget.index].tokenType}", style: text_style_table_row)),
+              width: 125.0,
+            ),
+            SizedBox(
+              child: Container(
+                  child: Text("${widget.tokenList[widget.index].lexeme}", style: text_style_table_row)),
+              width: 80.0,
+            ),
+            SizedBox(
+              child: Container(
+                  child: Text("${widget.tokenList[widget.index].literal}", style: text_style_table_row)),
+              width: 80.0,
+            ),
+            SizedBox(
+              child: Container(
+                  child: Text("${widget.tokenList[widget.index].line}", style: text_style_table_row)),
+              width: 80.0,
+            ),
+          ],
         ),
       ),
     );

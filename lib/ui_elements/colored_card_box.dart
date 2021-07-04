@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-class CardBox extends StatelessWidget {
+class ColoredCardBox extends StatelessWidget {
   final Widget child;
-  CardBox({this.child});
+  final Color color;
+  ColoredCardBox({this.child, this.color});
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Card(
+        color: color,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: child,
