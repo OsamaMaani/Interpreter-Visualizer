@@ -29,6 +29,7 @@ class _CodeTextState extends State<CodeText> {
             : TextField(
                 controller: appData.editingController,
                 autofocus: true,
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
                   hintText: "Write some code here and visualize!",
                 ),

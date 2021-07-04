@@ -15,7 +15,6 @@ class TextHighlighter extends StatefulWidget {
 
 class _TextHighlighterState extends State<TextHighlighter> {
 
-
   // Timer timer;
   //
   //
@@ -51,7 +50,7 @@ class _TextHighlighterState extends State<TextHighlighter> {
                   .map((e){
                     return TextSpan(
                   text: e[0],
-                  style: TextStyle( color: e[1],fontSize: 20, fontWeight: FontWeight.bold)
+                  style: TextStyle( color: e[1],fontSize: 30, fontWeight: FontWeight.bold)
               );})
                   .toList())
 

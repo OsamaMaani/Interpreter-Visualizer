@@ -23,10 +23,16 @@ class AppData with ChangeNotifier{
    List<Token> get tokensList => _tokensList;
 
   List _richTextList = [];
-   List _tokensColors = [];
+  List _tokensColors = [];
+  List _tokensIndices = [];
 
 
-   List get tokensColors => _tokensColors;
+   List get tokensIndices => _tokensIndices;
+   set tokensIndices(List value) {
+    _tokensIndices = value;
+  }
+
+  List get tokensColors => _tokensColors;
 
    set tokensColors(List value) {
     _tokensColors = value;

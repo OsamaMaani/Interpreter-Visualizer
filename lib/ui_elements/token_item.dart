@@ -36,10 +36,9 @@ class _TokenItemState extends State<TokenItem>
     animation = Tween(begin: 0.0, end: 1.0).animate(animationController);
 
     var appdata = Provider.of<AppData>(context, listen: false);
-    print(widget.index);
-    print(appdata.tokensColors[widget.index]);
 
-    animation1 = ColorTween(begin: Colors.black, end: appdata.tokensColors[widget.index])
+    var tokenIndex = appdata.tokensIndices[widget.index];
+    animation1 = ColorTween(begin: Colors.black, end: appdata.tokensColors[tokenIndex])
         .animate(animationController);
     animation.addStatusListener((status) {
       setState(() {});
@@ -57,9 +56,16 @@ class _TokenItemState extends State<TokenItem>
   @override
   Widget build(BuildContext context) {
     var appdata = Provider.of<AppData>(context);
-    appdata.richTextList[widget.index][1]=animation1.value;
-    var temp = List.from(appdata.richTextList);
-    //appdata.richTextList = temp;
+    var tokenIndex = appdata.tokensIndices[widget.index];
+
+    if(tokenIndex < appdata.richTextList.length) {
+      appdata.richTextList[tokenIndex][1] = animation1.value;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var temp = List.from(appdata.richTextList);
+      appdata.richTextList = temp;
+    });
 
     return Opacity(
       opacity: animation.value,

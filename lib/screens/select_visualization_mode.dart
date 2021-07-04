@@ -31,7 +31,6 @@ class _ModesState extends State<Modes> {
 
     Widget getClickedPage() {
       if (appData.isVisualized && appData.circleOneClicked){
-
         return TokensPage();
       }
       else if (appData.isVisualized && appData.circleTwoClicked)
@@ -89,8 +88,9 @@ class _ModesState extends State<Modes> {
       var sourceCode = appData.editingController.text;
       progress.showWithText("Compiling ...");
       readFile().then((value) {
-        var richTextList = [], tokensColors = [];
+        var richTextList = [], tokensColors = [], tokensIndices = [];
         int counter = 0, lastEnd, shift = 0;
+        appData.tokensList.clear();
         LineSplitter.split(value).forEach((line) {
           // print(" here is the $line");
           var splittedList = line.split(",");
@@ -114,7 +114,6 @@ class _ModesState extends State<Modes> {
             var tokenText = sourceCode.substring(start, end + 1);
 
 
-
             richTextList.add([tokenText, Colors.black, 1]);
 
             lastEnd = end;
@@ -124,7 +123,8 @@ class _ModesState extends State<Modes> {
           appData.tokensList
               .add(Token(splittedList[0], splittedList[1], splittedList[2], int.parse(splittedList[3]), int.parse(splittedList[4]), int.parse(splittedList[5]), int.parse(splittedList[6])));
 
-          print(tokensColors.length);
+          // print(tokensColors.length);
+          tokensIndices.add(tokensColors.length);
           tokensColors.add(appData.tokensList.last.color);
 
           // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -134,14 +134,20 @@ class _ModesState extends State<Modes> {
         // for (var x in tokensColors){
         //   if(x != Colors.black)print(x);
         // }
-
+        appData.tokensIndices = tokensIndices;
         appData.richTextList = richTextList;
         appData.tokensColors = tokensColors;
+
+        print(tokensIndices);
+        print(appData.tokensList.length);
+        print(richTextList.length);
+        print(tokensColors.length);
+
         appData.visualize();
         progress.dismiss();
       });
 
-      print("Here is the code << ${appData.editingController.text} >>");
+      // print("Here is the code << ${appData.editingController.text} >>");
     }
 
     return ProgressHUD(
