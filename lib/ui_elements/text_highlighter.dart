@@ -15,26 +15,6 @@ class TextHighlighter extends StatefulWidget {
 
 class _TextHighlighterState extends State<TextHighlighter> {
 
-  // Timer timer;
-  //
-  //
-  // void _setTimer() {
-  //
-  //   timer = Timer.periodic(Duration(milliseconds:700), (timer) {
-  //     setState(() {
-  //
-  //     });
-  //   });
-  // }
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _setTimer();
-  // }
-  //
-
-
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context,listen: true);
