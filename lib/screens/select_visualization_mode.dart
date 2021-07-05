@@ -24,6 +24,9 @@ class Modes extends StatefulWidget {
 
 class _ModesState extends State<Modes> {
   FileStorage fileStorage;
+  
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +153,34 @@ class _ModesState extends State<Modes> {
       // print("Here is the code << ${appData.editingController.text} >>");
     }
 
+    void _onPressedLogic(var context){
+      final progress = ProgressHUD.of(context);
+      if (!appData.isVisualized) {
+        if (appData.editingController.text.isEmpty) {
+          showAlertDialog(context);
+        } else {
+          compile(progress);
+        }
+      } else if (appData.isVisualized &&
+          appData.circleOneClicked) {
+        appData.changeCircleOneState();
+      } else if (appData.isVisualized &&
+          appData.circleTwoClicked) {
+        appData.changeCircleTwoState();
+      } else if (appData.isVisualized &&
+          appData.circleThreeClicked) {
+        appData.changeCircleThreeState();
+      } else if (appData.isVisualized &&
+          appData.circleFourClicked) {
+        appData.changeCircleFourState();
+      } else if (appData.isVisualized &&
+          appData.editingController.text.isEmpty) {
+        showAlertDialog(context);
+      } else {
+        compile(progress);
+      }
+    }
+
     return ProgressHUD(
       child: Builder(
         builder: (context) {
@@ -163,31 +194,8 @@ class _ModesState extends State<Modes> {
                   width: 190,
                   child: ElevatedButton(
                     onPressed: () {
-                      final progress = ProgressHUD.of(context);
-                      if (!appData.isVisualized) {
-                        if (appData.editingController.text.isEmpty) {
-                          showAlertDialog(context);
-                        } else {
-                          compile(progress);
-                        }
-                      } else if (appData.isVisualized &&
-                          appData.circleOneClicked) {
-                        appData.changeCircleOneState();
-                      } else if (appData.isVisualized &&
-                          appData.circleTwoClicked) {
-                        appData.changeCircleTwoState();
-                      } else if (appData.isVisualized &&
-                          appData.circleThreeClicked) {
-                        appData.changeCircleThreeState();
-                      } else if (appData.isVisualized &&
-                          appData.circleFourClicked) {
-                        appData.changeCircleFourState();
-                      } else if (appData.isVisualized &&
-                          appData.editingController.text.isEmpty) {
-                        showAlertDialog(context);
-                      } else {
-                        compile(progress);
-                      }
+                      _onPressedLogic(context);
+
                     },
                     child: Text(
                       getText(),
