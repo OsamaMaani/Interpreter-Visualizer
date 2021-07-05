@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/ui_elements/single_graph.dart';
 import 'package:flutterdesktopapp/ui_elements/freescrollview.dart';
+import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:provider/provider.dart';
 
 class SyntacticPage extends StatefulWidget {
   // const SyntacticPage({Key? key}) : super(key: key);
@@ -12,11 +14,14 @@ class SyntacticPage extends StatefulWidget {
 class _SyntacticPageState extends State<SyntacticPage> with TickerProviderStateMixin{
   AnimationController _animationController;
   double animationDuration = 0.0;
-  int NumberOfGraphs = 4;
+  int NumberOfGraphs;
+  //int NumberOfGraphs = 4;
 
   @override
   void initState() {
     super.initState();
+    final appData = Provider.of<AppData>(context, listen: false);
+    NumberOfGraphs = appData.jsonList.length;
     final int totalDuration = NumberOfGraphs * 5000;
     _animationController = AnimationController(
         vsync: this, duration: new Duration(milliseconds: totalDuration));

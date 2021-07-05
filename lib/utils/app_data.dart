@@ -11,6 +11,21 @@ class AppData with ChangeNotifier{
    bool _circleFourClicked = false;
    bool _tokensChange = false;
 
+   List _richTextList = [];
+   List _tokensColors = [];
+   List _tokensIndices = [];
+   List<Token> _tokensList = [];
+
+   List<String> _jsonList =[];
+   List<String> _newNodeID =[];
+   List<String> _nodeDataList = [];
+
+
+   List<String> get jsonList => _jsonList;
+
+  set jsonList(List<String> value) {
+    _jsonList = value;
+  }
 
   void refreshTokensChange(){
      _tokensChange = !_tokensChange;
@@ -18,13 +33,10 @@ class AppData with ChangeNotifier{
   }
 
   bool get tokensChange => _tokensChange;
-  List<Token> _tokensList = [];
 
-   List<Token> get tokensList => _tokensList;
 
-  List _richTextList = [];
-  List _tokensColors = [];
-  List _tokensIndices = [];
+  List<Token> get tokensList => _tokensList;
+
 
 
    List get tokensIndices => _tokensIndices;
@@ -107,4 +119,16 @@ class AppData with ChangeNotifier{
 
 
    TextEditingController get editingController => _editingController;
+
+   List<String> get newNodeID => _newNodeID;
+
+   set newNodeID(List<String> value) {
+    _newNodeID = value;
+   }
+
+   List<String> get nodeDataList => _nodeDataList;
+
+   set nodeDataList(List<String> value) {
+    _nodeDataList = value;
+   }
 }

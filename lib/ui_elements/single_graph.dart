@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:graphite/core/matrix.dart';
 import 'package:graphite/graphite.dart';
+import 'package:provider/provider.dart';
 
 
 class SingleGraph extends StatefulWidget {
@@ -46,7 +48,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-
+    final appData = Provider.of<AppData>(context);
     const presetBasic = '[{"id":"A","next":["B"]},{"id":"B","next":["C","D","E"]},'
         '{"id":"C","next":["F"]},{"id":"D","next":["J"]},{"id":"E","next":["J"]},'
         '{"id":"J","next":["I"]},{"id":"I","next":["H"]},{"id":"F","next":["K"]},'
@@ -66,11 +68,11 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
         '{"id":"I","next":[]},{"id":"J","next":["K"]},'
         '{"id":"K","next":["L"]},{"id":"L","next":[]}]';
 
-    List listOfJSON = [presetBasic0, presetBasic1, presetBasic2, presetBasic3, presetComplex];
-
+    // List listOfJSON = [presetBasic0, presetBasic1, presetBasic2, presetBasic3, presetComplex];
+    List listOfJSON = appData.jsonList;
     var graph = nodeInputFromJson(listOfJSON[widget.index]);
-    var newNodeID = ["A", "B", "C", "D"];
-
+    //var newNodeID = ["A", "B", "C", "D"];
+    var  newNodeID = appData.newNodeID;
     return Opacity(
       opacity: _animation.value,
       // opacity: animation,
