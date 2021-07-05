@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.7.0"
+  bidirectional_listview:
+    dependency: "direct main"
+    description:
+      name: bidirectional_listview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2+4"
   boolean_selector:
     dependency: transitive
     description:

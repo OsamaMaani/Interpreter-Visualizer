@@ -17,7 +17,7 @@ var text_style_highlight = TextStyle(
 
 var text_style_circle = TextStyle(
     fontWeight: FontWeight.bold,
-    fontSize: 20.0,
+    fontSize: 18.0,
     color: Colors.white
 );
 

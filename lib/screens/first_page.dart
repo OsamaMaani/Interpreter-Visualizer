@@ -15,24 +15,16 @@ class PageOne extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TwoCircles(
+        ThreeCircles(
           headline1: "1",
           title1: "Lexical Analysis",
           function1: appData.changeCircleOneState,
           headline2: "2",
           title2: "Syntactic Analysis",
           function2: appData.changeCircleTwoState,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 30.0),
-          child: ReusableCircle(
-            headline: "3",
-            title: "Semantic Analysis & Execution",
-            function: appData.changeCircleThreeState,
-          ),
+          headline3: "3",
+          title3: "Semantic Analysis & Execution",
+          function3: appData.changeCircleThreeState,
         ),
       ],
     );
