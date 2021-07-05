@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
-import 'package:flutterdesktopapp/ui_elements/text_highlighter.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:provider/provider.dart';
-import 'card_box.dart';
 import 'colored_card_box.dart';
 
 class TokenItem extends StatefulWidget {
@@ -24,8 +21,6 @@ class _TokenItemState extends State<TokenItem>
   Animation<double> animation;
   Animation<Color> animationColor;
   AnimationController animationController;
-
-  bool visible = false;
 
   @override
   void initState() {

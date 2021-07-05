@@ -8,8 +8,15 @@ class SyntacticPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int NumberOfGraphs = 2;
     return Container(
-      child: Stack(
-        children: List.generate(NumberOfGraphs, (index) => SingleGraph(index)),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SizedBox(
+          height: 1000,
+          width: 800,
+          child: Stack(
+            children: List.generate(NumberOfGraphs, (index) => SingleGraph(Duration(seconds: 2), index)),
+          ),
+        ),
       ),
     );
   }
