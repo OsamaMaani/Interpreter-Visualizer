@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/screens/full_visualization.dart';
 import 'package:flutterdesktopapp/screens/semantic_page.dart';
+import 'package:flutterdesktopapp/screens/statement_page.dart';
 import 'package:flutterdesktopapp/screens/syntactic_page.dart';
 import 'package:flutterdesktopapp/screens/tokens_page.dart';
 import 'package:flutterdesktopapp/screens/first_page.dart';
@@ -53,6 +54,27 @@ class _ModesState extends State<Modes> {
       else
         return "Visualize";
     }
+
+
+    Function getPrevButtonFunc(){
+      if(appData.circleTwoClicked && appData.visualizedStatementIndex > 0){
+        return (){
+          appData.visualizedStatementIndex--;
+        };
+      }
+      return null;
+    }
+
+    Function getNextButtonFunc(){
+      if(appData.circleTwoClicked){
+        return (){
+          appData.visualizedStatementIndex++;
+          print(appData.visualizedStatementIndex);
+        };
+      }
+      return null;
+    }
+
 
     void showAlertDialog(BuildContext context) {
       Widget okButton = ElevatedButton(
@@ -160,43 +182,53 @@ class _ModesState extends State<Modes> {
               children: [
                 SizedBox(
                   height: 40,
-                  width: 190,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final progress = ProgressHUD.of(context);
-                      if (!appData.isVisualized) {
-                        if (appData.editingController.text.isEmpty) {
-                          showAlertDialog(context);
-                        } else {
-                          compile(progress);
-                        }
-                      } else if (appData.isVisualized &&
-                          appData.circleOneClicked) {
-                        appData.changeCircleOneState();
-                      } else if (appData.isVisualized &&
-                          appData.circleTwoClicked) {
-                        appData.changeCircleTwoState();
-                      } else if (appData.isVisualized &&
-                          appData.circleThreeClicked) {
-                        appData.changeCircleThreeState();
-                      } else if (appData.isVisualized &&
-                          appData.circleFourClicked) {
-                        appData.changeCircleFourState();
-                      } else if (appData.isVisualized &&
-                          appData.editingController.text.isEmpty) {
-                        showAlertDialog(context);
-                      } else {
-                        compile(progress);
-                      }
-                    },
-                    child: Text(
-                      getText(),
-                      style: TextStyle(
-                          color: Colors.greenAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    style: run_button_style,
+                  width: 800,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          final progress = ProgressHUD.of(context);
+                          if (!appData.isVisualized) {
+                            if (appData.editingController.text.isEmpty) {
+                              showAlertDialog(context);
+                            } else {
+                              compile(progress);
+                            }
+                          } else if (appData.isVisualized &&
+                              appData.circleOneClicked) {
+                            appData.changeCircleOneState();
+                          } else if (appData.isVisualized &&
+                              appData.circleTwoClicked) {
+                            appData.changeCircleTwoState();
+                          } else if (appData.isVisualized &&
+                              appData.circleThreeClicked) {
+                            appData.changeCircleThreeState();
+                          } else if (appData.isVisualized &&
+                              appData.circleFourClicked) {
+                            appData.changeCircleFourState();
+                          } else if (appData.isVisualized &&
+                              appData.editingController.text.isEmpty) {
+                            showAlertDialog(context);
+                          } else {
+                            compile(progress);
+                          }
+                        },
+                        child: Text(
+                          getText(),
+                          style: text_style_header_button,
+                        ),
+                        style: run_button_style,
+                      ),
+                      ElevatedButton(onPressed: getPrevButtonFunc(), style: run_button_style, child: Text(
+                        "Previous",
+                        style: text_style_header_button,
+                      )),
+                      ElevatedButton(onPressed: getNextButtonFunc(), style: run_button_style, child: Text(
+                          "Next",
+                          style: text_style_header_button
+                      ))
+                    ],
                   ),
                 ),
                 SizedBox(

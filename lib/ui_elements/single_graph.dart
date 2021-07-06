@@ -25,6 +25,9 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
     start = (widget.duration * widget.index ).toDouble();
     end = start + widget.duration;
     print("START $start , end $end");
+
+
+
     _animation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -47,6 +50,34 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
 
+    var p0 = '[{"next":[],"id":"0"}]';
+    var p1 = '[{"next":["1"],"id":"0"},{"next":[],"id":"1"}]';
+    var p2 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":[],"id":"2"}]';
+    var p3 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":[],"id":"3"}]';
+    var p4 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":[],"id":"4"}]';
+    var p5 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":[],"id":"5"}]';
+    var p6 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":[],"id":"6"}]';
+    var p7 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":[],"id":"7"}]';
+    var p8 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":[],"id":"8"}]';
+    var p9 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":[],"id":"9"}]';
+    var p10 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":[],"id":"10"}]';
+    var p11 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":[],"id":"11"}]';
+    var p12 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p13 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p14 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p15 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p16 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p17 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p18 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p19 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p20 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p21 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+    var p22 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
+
+    // List listOfJSON = [presetBasic0, presetBasic1, presetBasic2, presetBasic3, presetComplex];
+    List listOfJSON = [p0,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22];
+
+
     const presetBasic = '[{"id":"A","next":["B"]},{"id":"B","next":["C","D","E"]},'
         '{"id":"C","next":["F"]},{"id":"D","next":["J"]},{"id":"E","next":["J"]},'
         '{"id":"J","next":["I"]},{"id":"I","next":["H"]},{"id":"F","next":["K"]},'
@@ -66,7 +97,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
         '{"id":"I","next":[]},{"id":"J","next":["K"]},'
         '{"id":"K","next":["L"]},{"id":"L","next":[]}]';
 
-    List listOfJSON = [presetBasic0, presetBasic1, presetBasic2, presetBasic3, presetComplex];
+    // List listOfJSON = [presetBasic0, presetBasic1, presetBasic2, presetBasic3, presetComplex];
 
     var graph = nodeInputFromJson(listOfJSON[widget.index]);
     var newNodeID = ["A", "B", "C", "D"];
@@ -84,7 +115,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
           pathBuilder: customEdgePathBuilder,
           builder: (ctx, node) {
             return CircleAvatar(
-              backgroundColor: (newNodeID[widget.index] == node.id ? Colors.red : Colors.blue),
+              backgroundColor: (widget.index.toString() == node.id ? Colors.red : Colors.blue),
               radius: 30.0,
               child: ListView.builder(
                 itemCount: widget.index + 1,

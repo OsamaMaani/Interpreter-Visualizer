@@ -26,8 +26,17 @@ class AppData with ChangeNotifier{
   List _tokensColors = [];
   List _tokensIndices = [];
 
+  int _visualizedStatementIndex = 0;
 
-   List get tokensIndices => _tokensIndices;
+   int get visualizedStatementIndex => _visualizedStatementIndex;
+
+
+   set visualizedStatementIndex(int value) {
+    _visualizedStatementIndex = value;
+    notifyListeners();
+   }
+
+  List get tokensIndices => _tokensIndices;
    set tokensIndices(List value) {
     _tokensIndices = value;
   }
