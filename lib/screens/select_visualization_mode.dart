@@ -25,17 +25,26 @@ class Modes extends StatefulWidget {
 
 class _ModesState extends State<Modes> {
   FileStorage fileStorage;
-  static const platform = const MethodChannel('com.example.interpretervisualizer');
+  static const platform = const MethodChannel('com.example.flutterdesktopapp');
 
-
-
-  Future<dynamic> _sendCodeToJavaToCompile(String code) async{
+  Future<dynamic> printy() async{
+    String value;
     try {
-      final isDone = await platform.invokeMethod('simpleInterpreter',code);
+      value = await platform.invokeMethod('printy');
     } on PlatformException catch (e) {
       print(e);
     }
+    print(value);
   }
+
+
+  // Future<dynamic> simpleInterpreter(String code) async{
+  //   try {
+  //     final isDone = await platform.invokeMethod('simpleInterpreter',code);
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //   }
+  // }
 
 
 
@@ -185,35 +194,6 @@ class _ModesState extends State<Modes> {
 
       // print("Here is the code << ${appData.editingController.text} >>");
     }
-
-    void _onPressedLogic(var context){
-      final progress = ProgressHUD.of(context);
-      if (!appData.isVisualized) {
-        if (appData.editingController.text.isEmpty) {
-          showAlertDialog(context);
-        } else {
-          compile(progress);
-        }
-      } else if (appData.isVisualized &&
-          appData.circleOneClicked) {
-        appData.changeCircleOneState();
-      } else if (appData.isVisualized &&
-          appData.circleTwoClicked) {
-        appData.changeCircleTwoState();
-      } else if (appData.isVisualized &&
-          appData.circleThreeClicked) {
-        appData.changeCircleThreeState();
-      } else if (appData.isVisualized &&
-          appData.circleFourClicked) {
-        appData.changeCircleFourState();
-      } else if (appData.isVisualized &&
-          appData.editingController.text.isEmpty) {
-        showAlertDialog(context);
-      } else {
-        compile(progress);
-      }
-    }
-
 
     return ProgressHUD(
       child: Builder(
