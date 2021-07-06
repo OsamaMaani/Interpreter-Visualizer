@@ -6,8 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/screens/full_visualization.dart';
 import 'package:flutterdesktopapp/screens/semantic_page.dart';
-import 'package:flutterdesktopapp/screens/statement_page.dart';
-import 'package:flutterdesktopapp/screens/syntactic_page.dart';
+import 'package:flutterdesktopapp/screens/syntactic_and_statement_page.dart';
 import 'package:flutterdesktopapp/screens/tokens_page.dart';
 import 'package:flutterdesktopapp/screens/first_page.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
@@ -55,10 +54,11 @@ class _ModesState extends State<Modes> {
 
     Widget getClickedPage() {
       if (appData.isVisualized && appData.circleOneClicked){
-        return TokensPage();
+        return TokensPage(appData.tokensList.length);
       }
-      else if (appData.isVisualized && appData.circleTwoClicked)
-        return SyntacticPage();
+      else if (appData.isVisualized && appData.circleTwoClicked) {
+        return SyntacticPage(4, appData.visualizedStatementIndex); //TODO add number of graphs ref
+      }
       else if (appData.isVisualized && appData.circleThreeClicked)
         return SemanticPage();
       else if (appData.isVisualized && appData.circleFourClicked)
@@ -92,12 +92,10 @@ class _ModesState extends State<Modes> {
       if(appData.circleTwoClicked){
         return (){
           appData.visualizedStatementIndex++;
-          print(appData.visualizedStatementIndex);
         };
       }
       return null;
     }
-
 
     void showAlertDialog(BuildContext context) {
       Widget okButton = ElevatedButton(

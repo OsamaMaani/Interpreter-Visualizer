@@ -43,6 +43,10 @@ class AppData with ChangeNotifier{
    int get visualizedStatementIndex => _visualizedStatementIndex;
 
 
+   void resetVisualizerStatementIndex(){
+     _visualizedStatementIndex = 0;
+   }
+
    set visualizedStatementIndex(int value) {
     _visualizedStatementIndex = value;
     notifyListeners();

@@ -7,48 +7,44 @@ import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:provider/provider.dart';
 class TokensPage extends StatefulWidget {
-  // const TokensPage({Key? key}) : super(key: key);
+  final int NumberOfTokens;
+
+  TokensPage(this.NumberOfTokens);
 
   @override
   _TokensPageState createState() => _TokensPageState();
 }
 
-class _TokensPageState extends State<TokensPage> {
-
-  // TokensPage({Key key}) : super(key: key);
-
-  DateTime lastRender;
-
-  get _duration {
-    var now = DateTime.now();
-    var defaultDelay = Duration(seconds: 1);
-    Duration delay;
-    if (lastRender == null) {
-      lastRender = now;
-      delay = defaultDelay;
-    } else {
-
-      var difference = now.difference(lastRender);
-      if (difference > defaultDelay) {
-        lastRender = now;
-        delay = defaultDelay;
-      } else {
-        var durationOffcet = difference - defaultDelay;
-        delay = defaultDelay + (-durationOffcet);
-
-        lastRender = now.add(-durationOffcet);
-      }
-      return delay;
-    }
-
-    return defaultDelay;
-  }
+class _TokensPageState extends State<TokensPage> with TickerProviderStateMixin{
+  AnimationController _animationController;
+  double animationDuration;
+  int durationOfSingleToken;
+  int totalDuration;
 
   @override
-  Widget build(BuildContext context) {
-    final List<Token> tokenList = Provider.of<AppData>(context).tokensList;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    durationOfSingleToken = 1500;
+    totalDuration = widget.NumberOfTokens * durationOfSingleToken;
+    _animationController = AnimationController(
+        vsync: this, duration: new Duration(milliseconds: totalDuration));
 
-    return Container(
+    animationDuration = durationOfSingleToken / totalDuration;
+    _animationController.forward();
+  }
+
+
+@override
+void dispose() {
+  print("Tokens Page Disposed");
+  _animationController.dispose();
+  super.dispose();
+}
+
+@override
+  Widget build(BuildContext context) {
+   return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -80,9 +76,9 @@ class _TokensPageState extends State<TokensPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: tokenList.length,
-              itemBuilder: (_, index) {
-                return TokenItem(_duration, tokenList, index);
+              itemCount: widget.NumberOfTokens,
+              itemBuilder: (context, index) {
+                return TokenItem(index, animationDuration, _animationController);
               },
             ),
           )

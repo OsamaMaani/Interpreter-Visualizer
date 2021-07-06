@@ -7,22 +7,24 @@ import 'package:provider/provider.dart';
 
 
 class SingleGraph extends StatefulWidget {
+  final int statementIndex;
   final int index;
   final double duration;
   final AnimationController animationController;
-  SingleGraph(this.index, this.animationController, this.duration);
+  SingleGraph(this.index, this.statementIndex, this.animationController, this.duration);
 
   @override
   _SingleGraphState createState() => _SingleGraphState();
 }
 
 class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStateMixin{
-  Animation _animation;
+  Animation animation;
   double start;
   double end;
 
   @override
   void initState() {
+    print(widget.index.toString() + " signing in");
     super.initState();
     start = (widget.duration * widget.index ).toDouble();
     end = start + widget.duration;
@@ -30,7 +32,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
 
 
 
-    _animation = Tween<double>(
+    animation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(
@@ -48,10 +50,27 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
     });
   }
 
+  @override
+  void dispose() {
+    print("Graph Disposed");
+    // TODO: implement dispose
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
+
+
+
+
+    const presetBasic0 = '[{"id":"A","next":[]}]';
+    const presetBasic1 = '[{"id":"A","next":["B"]},{"id":"B","next":[]}]';
+    const presetBasic2 = '[{"id":"A","next":["B", "C"]},{"id":"B","next":[]}, {"id":"C","next":[]}]';
+    const presetBasic3 = '[{"id":"A","next":["B", "C"]},{"id":"B","next":["D"]}, {"id":"C","next":[]}, {"id":"D","next":[]}]';
+
+    List listOfJSON1 = [presetBasic0, presetBasic1, presetBasic2, presetBasic3];
 
 
     var p0 = '[{"next":[],"id":"0"}]';
@@ -78,36 +97,38 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
     var p21 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
     var p22 = '[{"next":["1"],"id":"0"},{"next":["2"],"id":"1"},{"next":["3"],"id":"2"},{"next":["4"],"id":"3"},{"next":["5"],"id":"4"},{"next":["6"],"id":"5"},{"next":["7"],"id":"6"},{"next":["8"],"id":"7"},{"next":["9"],"id":"8"},{"next":["10"],"id":"9"},{"next":["11"],"id":"10"},{"next":["12"],"id":"11"},{"next":[],"id":"12"}]';
 
-    // List listOfJSON = [presetBasic0, presetBasic1, presetBasic2, presetBasic3, presetComplex];
-    List listOfJSON = [p0,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22];
+    List listOfJSON2 = [p0,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22];
 
 
-    const presetBasic = '[{"id":"A","next":["B"]},{"id":"B","next":["C","D","E"]},'
-        '{"id":"C","next":["F"]},{"id":"D","next":["J"]},{"id":"E","next":["J"]},'
-        '{"id":"J","next":["I"]},{"id":"I","next":["H"]},{"id":"F","next":["K"]},'
-        '{"id":"K","next":["L"]},{"id":"H","next":["L"]},{"id":"L","next":["P"]},'
-        '{"id":"P","next":["M","N"]},{"id":"M","next":[]},{"id":"N","next":[]}]';
+    // const presetBasic = '[{"id":"A","next":["B"]},{"id":"B","next":["C","D","E"]},'
+    //     '{"id":"C","next":["F"]},{"id":"D","next":["J"]},{"id":"E","next":["J"]},'
+    //     '{"id":"J","next":["I"]},{"id":"I","next":["H"]},{"id":"F","next":["K"]},'
+    //     '{"id":"K","next":["L"]},{"id":"H","next":["L"]},{"id":"L","next":["P"]},'
+    //     '{"id":"P","next":["M","N"]},{"id":"M","next":[]},{"id":"N","next":[]}]';
 
-    const presetBasic0 = '[{"id":"A","next":[]}]';
-    const presetBasic1 = '[{"id":"A","next":["B"]},{"id":"B","next":[]}]';
-    const presetBasic2 = '[{"id":"A","next":["B", "C"]},{"id":"B","next":[]}, {"id":"C","next":[]}]';
-    const presetBasic3 = '[{"id":"A","next":["B", "C"]},{"id":"B","next":["D"]}, {"id":"C","next":[]}, {"id":"D","next":[]}]';
 
-    const presetComplex = '[{"id":"A","next":["B"]},{"id":"U","next":["G"]},'
-        '{"id":"B","next":["C","D","E","F","M"]},{"id":"C","next":["G"]},'
-        '{"id":"D","next":["H"]},{"id":"E","next":["H"]},{"id":"F","next":["N","O"]},'
-        '{"id":"N","next":["I"]},{"id":"O","next":["P"]},{"id":"P","next":["I"]},'
-        '{"id":"M","next":["L"]},{"id":"G","next":["I"]},{"id":"H","next":["J"]},'
-        '{"id":"I","next":[]},{"id":"J","next":["K"]},'
-        '{"id":"K","next":["L"]},{"id":"L","next":[]}]';
+    // const presetComplex = '[{"id":"A","next":["B"]},{"id":"U","next":["G"]},'
+    //     '{"id":"B","next":["C","D","E","F","M"]},{"id":"C","next":["G"]},'
+    //     '{"id":"D","next":["H"]},{"id":"E","next":["H"]},{"id":"F","next":["N","O"]},'
+    //     '{"id":"N","next":["I"]},{"id":"O","next":["P"]},{"id":"P","next":["I"]},'
+    //     '{"id":"M","next":["L"]},{"id":"G","next":["I"]},{"id":"H","next":["J"]},'
+    //     '{"id":"I","next":[]},{"id":"J","next":["K"]},'
+    //     '{"id":"K","next":["L"]},{"id":"L","next":[]}]';
 
-    // List listOfJSON = [presetBasic0, presetBasic1, presetBasic2, presetBasic3, presetComplex];
-  //  List listOfJSON = appData.jsonList;
-    var graph = nodeInputFromJson(listOfJSON[widget.index]);
-    //var newNodeID = ["A", "B", "C", "D"];
-    var  newNodeID = appData.newNodeID;
+
+    var listOfGraphs = [listOfJSON1, listOfJSON2];
+
+    var graph = nodeInputFromJson(listOfGraphs[widget.statementIndex][widget.index]);
+    var newNodeID = ["A", "B", "C", "D"];
+
+
+    if(animation.value > 0 && animation.value < 1){
+      // print(widget.index);
+    }
+
+
     return Opacity(
-      opacity: _animation.value,
+      opacity: animation.value,
       // opacity: animation,
       child: AbsorbPointer(absorbing: true,
         child: DirectGraph(
@@ -121,12 +142,13 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
             return CircleAvatar(
               backgroundColor: (widget.index.toString() == node.id ? Colors.red : Colors.blue),
               radius: 30.0,
-              child: ListView.builder(
-                itemCount: widget.index + 1,
-                itemBuilder: (context, index){
-                  return Center(child: Text("Haha" * (index + 1), style: text_style_circle));
-                },
-              ),
+              child: Text(widget.statementIndex.toString()),
+              // child: ListView.builder(
+              //   itemCount: widget.index + 1,
+              //   itemBuilder: (context, index){
+              //     return Center(child: Text("Haha" * (index + 1), style: text_style_circle));
+              //   },
+              // ),
             );
           },
           paintBuilder: (edge) {
