@@ -25,7 +25,7 @@ class _CodeTextState extends State<CodeText> {
       child: SizedBox(
         height: 800,
         width: 1200,
-        child: ((appData.isVisualized && appData.circleOneClicked))
+        child: ((appData.isVisualized && (appData.circleOneClicked || appData.circleTwoClicked || appData.circleThreeClicked)))
             ? TextHighlighter()
             : TextField(
                 controller: appData.editingController,

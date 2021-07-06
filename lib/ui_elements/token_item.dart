@@ -54,6 +54,8 @@ class _TokenItemState extends State<TokenItem>
 
   @override
   Widget build(BuildContext context) {
+    print(widget.index.toString() + " " + animation.value.toString());
+
     var appdata = Provider.of<AppData>(context);
     var tokenIndex = appdata.tokensIndices[widget.index];
     var tokenGoalColor = appdata.tokensColors[tokenIndex];
