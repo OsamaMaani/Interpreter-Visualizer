@@ -24,7 +24,18 @@ class Modes extends StatefulWidget {
 
 class _ModesState extends State<Modes> {
   FileStorage fileStorage;
-  
+  static const platform = const MethodChannel('com.example.interpretervisualizer');
+
+
+
+  Future<dynamic> _sendCodeToJavaToCompile(String code) async{
+    try {
+      final isDone = await platform.invokeMethod('simpleInterpreter',code);
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
 
 
 
@@ -181,6 +192,7 @@ class _ModesState extends State<Modes> {
       }
     }
 
+
     return ProgressHUD(
       child: Builder(
         builder: (context) {
@@ -195,7 +207,9 @@ class _ModesState extends State<Modes> {
                   child: ElevatedButton(
                     onPressed: () {
                       _onPressedLogic(context);
-
+                      _sendCodeToJavaToCompile(appData.editingController.text.toString()).then((value){
+                        // whatever...
+                      });
                     },
                     child: Text(
                       getText(),
