@@ -6,6 +6,11 @@ import 'package:provider/provider.dart';
 
 
 class SyntacticPage extends StatefulWidget {
+ final int numberOfGraphs;
+ final int visualizedStatementIndex;
+
+ SyntacticPage(this.numberOfGraphs, this.visualizedStatementIndex);
+
   final statementPageKey = GlobalKey<_StatementPageState>();
 
   @override
@@ -17,18 +22,16 @@ class _SyntacticPageState extends State<SyntacticPage> {
 
   @override
   Widget build(BuildContext context) {
-    var appData = Provider.of<AppData>(context);
-
     return Container(
-      child: StatementPage(key: widget.statementPageKey, statementIndex: appData.visualizedStatementIndex),
+      child: StatementPage(key: widget.statementPageKey, numberOfGraphs: widget.numberOfGraphs, statementIndex: widget.visualizedStatementIndex),
     );
   }
 }
 
 class StatementPage extends StatefulWidget {
-
+  final int numberOfGraphs;
   final int statementIndex;
-  const StatementPage({Key key, this.statementIndex}) : super(key: key);
+  const StatementPage({Key key, this.numberOfGraphs, this.statementIndex}) : super(key: key);
 
   @override
   _StatementPageState createState() => _StatementPageState();
@@ -36,15 +39,15 @@ class StatementPage extends StatefulWidget {
 
 class _StatementPageState extends State<StatementPage> with TickerProviderStateMixin{
   AnimationController _animationController;
-  double animationDuration = 0.0;
-  int NumberOfGraphs = 4;
+  double animationDuration;
+  int durationOfSingleGraph;
+  int totalDuration;
 
   @override
   void initState() {
     super.initState();
-
-    final int durationOfSingleGraph = 1500;
-    final int totalDuration = NumberOfGraphs * durationOfSingleGraph;
+    durationOfSingleGraph = 1500;
+    totalDuration = widget.numberOfGraphs * durationOfSingleGraph;
     _animationController = AnimationController(
         vsync: this, duration: new Duration(milliseconds: totalDuration));
 
@@ -62,7 +65,6 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    // int NumberOfGraphs = 4;
     return Container(
       child: FreeScrollView(
         child: SizedBox(
@@ -70,7 +72,7 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
           width: 800,
           child: Container(
             child: Stack(
-              children: List.generate(NumberOfGraphs, (index) => SingleGraph(index, widget.statementIndex, _animationController, animationDuration)),
+              children: List.generate(widget.numberOfGraphs, (index) => SingleGraph(index, widget.statementIndex, _animationController, animationDuration)),
             ),
           ),
         ),

@@ -31,10 +31,10 @@ class _ModesState extends State<Modes> {
 
     Widget getClickedPage() {
       if (appData.isVisualized && appData.circleOneClicked){
-        return TokensPage();
+        return TokensPage(appData.tokensList.length);
       }
       else if (appData.isVisualized && appData.circleTwoClicked) {
-        return SyntacticPage();
+        return SyntacticPage(4, appData.visualizedStatementIndex); //TODO add number of graphs ref
       }
       else if (appData.isVisualized && appData.circleThreeClicked)
         return SemanticPage();
@@ -73,7 +73,6 @@ class _ModesState extends State<Modes> {
       }
       return null;
     }
-
 
     void showAlertDialog(BuildContext context) {
       Widget okButton = ElevatedButton(

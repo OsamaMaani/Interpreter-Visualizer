@@ -16,12 +16,13 @@ class SingleGraph extends StatefulWidget {
 }
 
 class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStateMixin{
-  Animation _animation;
+  Animation animation;
   double start;
   double end;
 
   @override
   void initState() {
+    print(widget.index.toString() + " signing in");
     super.initState();
     start = (widget.duration * widget.index ).toDouble();
     end = start + widget.duration;
@@ -29,7 +30,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
 
 
 
-    _animation = Tween<double>(
+    animation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(
@@ -45,6 +46,13 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
       setState(() {
       });
     });
+  }
+
+  @override
+  void dispose() {
+    print("Graph Disposed");
+    // TODO: implement dispose
+    super.dispose();
   }
 
 
@@ -110,14 +118,14 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
     var newNodeID = ["A", "B", "C", "D"];
 
 
-    if(_animation.value > 0 && _animation.value < 1){
+    if(animation.value > 0 && animation.value < 1){
       // print(widget.index);
     }
 
 
 
     return Opacity(
-      opacity: _animation.value,
+      opacity: animation.value,
       // opacity: animation,
       child: AbsorbPointer(absorbing: true,
         child: DirectGraph(
