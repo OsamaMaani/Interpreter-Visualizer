@@ -14,6 +14,7 @@ import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:flutterdesktopapp/utils/file_processes.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import 'package:flutterdesktopapp/services/networking.dart';
 
 class Modes extends StatefulWidget {
   Modes({Key key}) : super(key: key);
@@ -24,42 +25,19 @@ class Modes extends StatefulWidget {
 
 class _ModesState extends State<Modes> {
   FileStorage fileStorage;
-  static const platform = const MethodChannel('com.example.flutterdesktopapp');
-
-  Future<dynamic> printy() async{
-    String value;
-    try {
-      value = await platform.invokeMethod('printy');
-    } on PlatformException catch (e) {
-      print(e);
-    }
-    print(value);
-  }
-
-
-  // Future<dynamic> simpleInterpreter(String code) async{
-  //   try {
-  //     final isDone = await platform.invokeMethod('simpleInterpreter',code);
-  //   } on PlatformException catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-
-
+  NetworkHelper networkHelper = NetworkHelper();
 
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
 
     Widget getClickedPage() {
-      if (appData.isVisualized && appData.circleOneClicked){
+      if (appData.isVisualized && appData.circleOneClicked) {
         return TokensPage(appData.tokensList.length);
-      }
-      else if (appData.isVisualized && appData.circleTwoClicked) {
-        return SyntacticPage(4, appData.visualizedStatementIndex); //TODO add number of graphs ref
-      }
-      else if (appData.isVisualized && appData.circleThreeClicked)
+      } else if (appData.isVisualized && appData.circleTwoClicked) {
+        return SyntacticPage(4,
+            appData.visualizedStatementIndex); //TODO add number of graphs ref
+      } else if (appData.isVisualized && appData.circleThreeClicked)
         return SemanticPage();
       else if (appData.isVisualized && appData.circleFourClicked)
         return FullVisualization();
@@ -78,19 +56,18 @@ class _ModesState extends State<Modes> {
         return "Visualize";
     }
 
-
-    Function getPrevButtonFunc(){
-      if(appData.circleTwoClicked && appData.visualizedStatementIndex > 0){
-        return (){
+    Function getPrevButtonFunc() {
+      if (appData.circleTwoClicked && appData.visualizedStatementIndex > 0) {
+        return () {
           appData.visualizedStatementIndex--;
         };
       }
       return null;
     }
 
-    Function getNextButtonFunc(){
-      if(appData.circleTwoClicked){
-        return (){
+    Function getNextButtonFunc() {
+      if (appData.circleTwoClicked) {
+        return () {
           appData.visualizedStatementIndex++;
         };
       }
@@ -127,70 +104,161 @@ class _ModesState extends State<Modes> {
       return data;
     }
 
-    void compile(var progress) {
+    void compile(List consoleMessages) {
+      appData.addConsoleMessageList(consoleMessages);
       var sourceCode = appData.editingController.text;
-      progress.showWithText("Compiling ...");
-      readFile().then((value) {
-        var richTextList = [], tokensColors = [], tokensIndices = [];
-        int counter = 0, lastEnd, shift = 0;
-        appData.tokensList.clear();
-        LineSplitter.split(value).forEach((line) {
-          // print(" here is the $line");
-          var splittedList = line.split(",");
+      var richTextList = [],
+          tokensColors = [],
+          tokensIndices = [];
+      int lastEnd,
+          shift = 0;
+      var tokensList = appData.tokensList;
 
-          if (splittedList[0] != "EOF") {
-            var start = int.parse(splittedList[4]) - shift;
-            var end = int.parse(splittedList[5]) - shift;
-            if (counter > 0) {
-              var betweenText = sourceCode.substring(lastEnd + 1, start);
-              if(betweenText.length > 1 && betweenText[0] == "\n"){
-                betweenText = "\n";
-                shift++;
-                start--;
-                end--;
-              }
-              richTextList.add([betweenText, Colors.black, 0]);
-              tokensColors.add(Colors.black);
+      for (int tokenIndex = 0; tokenIndex < tokensList.length; tokenIndex++) {
+        Token token = tokensList[tokenIndex];
+
+          var start = token.start - shift;
+          var end = token.end - shift;
+          if (tokenIndex > 0) { // no between text before the first token
+            var betweenText = sourceCode.substring(lastEnd + 1, start);
+
+            if (betweenText.length > 1 && betweenText[0] == "\n") {
+              betweenText = "\n";
+              shift++;
+              start--;
+              end--;
             }
-            // print("RichText  : "+(richTextList.length > 0 ? richTextList.last : ""));
+            richTextList.add([betweenText, Colors.black, 0]);
 
+            tokensColors.add(Colors.black);
+            }
+          if (token.tokenType != "EOF") { // no between text after EOF
             var tokenText = sourceCode.substring(start, end + 1);
-
-
             richTextList.add([tokenText, Colors.black, 1]);
-
-            lastEnd = end;
           }
-          counter++;
+          lastEnd = end;
+        tokensIndices.add(tokensColors.length);
+        tokensColors.add(tokensList[tokenIndex].color);
+      }
 
-          appData.tokensList
-              .add(Token(splittedList[0], splittedList[1], splittedList[2], int.parse(splittedList[3]), int.parse(splittedList[4]), int.parse(splittedList[5]), int.parse(splittedList[6])));
+      appData.tokensIndices = tokensIndices;
+      appData.richTextList = richTextList;
+      appData.tokensColors = tokensColors;
 
-          // print(tokensColors.length);
-          tokensIndices.add(tokensColors.length);
-          tokensColors.add(appData.tokensList.last.color);
+      appData.visualize();
+    }
 
-          // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-          //print("added to the list");
+
+
+
+
+    // void compile(var progress) {
+    //   var sourceCode = appData.editingController.text;
+    //   progress.showWithText("Compiling ...");
+    //   readFile().then((value) {
+    //     var richTextList = [], tokensColors = [], tokensIndices = [];
+    //     int counter = 0, lastEnd, shift = 0;
+    //     appData.tokensList.clear();
+    //     LineSplitter.split(value).forEach((line) {
+    //       // print(" here is the $line");
+    //       var splittedList = line.split(",");
+    //
+    //       if (splittedList[0] != "EOF") {
+    //         var start = int.parse(splittedList[4]) - shift;
+    //         var end = int.parse(splittedList[5]) - shift;
+    //         if (counter > 0) {
+    //           var betweenText = sourceCode.substring(lastEnd + 1, start);
+    //           if (betweenText.length > 1 && betweenText[0] == "\n") {
+    //             betweenText = "\n";
+    //             shift++;
+    //             start--;
+    //             end--;
+    //           }
+    //           richTextList.add([betweenText, Colors.black, 0]);
+    //           tokensColors.add(Colors.black);
+    //         }
+    //         print("RichText  : "+(richTextList.length > 0 ? richTextList.last : ""));
+    //
+    //         var tokenText = sourceCode.substring(start, end + 1);
+    //
+    //         richTextList.add([tokenText, Colors.black, 1]);
+    //
+    //         lastEnd = end;
+    //       }
+    //       counter++;
+    //
+    //       appData.tokensList.add(Token(
+    //           splittedList[0],
+    //           splittedList[1],
+    //           splittedList[2],
+    //           int.parse(splittedList[3]),
+    //           int.parse(splittedList[4]),
+    //           int.parse(splittedList[5]),
+    //           int.parse(splittedList[6])));
+    //
+    //       // print(tokensColors.length);
+    //       tokensIndices.add(tokensColors.length);
+    //       tokensColors.add(appData.tokensList.last.color);
+    //
+    //       // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    //       //print("added to the list");
+    //     });
+    //
+    //     // for (var x in tokensColors){
+    //     //   if(x != Colors.black)print(x);
+    //     // }
+    //     appData.tokensIndices = tokensIndices;
+    //     appData.richTextList = richTextList;
+    //     appData.tokensColors = tokensColors;
+    //
+    //     print(tokensIndices);
+    //     print(appData.tokensList.length);
+    //     print(richTextList.length);
+    //     print(tokensColors.length);
+    //
+    //     appData.visualize();
+    //     progress.dismiss();
+    //   });
+    //
+    //   // print("Here is the code << ${appData.editingController.text} >>");
+    // }
+
+    void callInterpreter(String string) {
+      List consoleMessages = [];
+      networkHelper
+          .sendCodeToInterpreter(appData.editingController.text.toString())
+          .then((resultMessages) {
+            consoleMessages = resultMessages;
+        networkHelper.getTokens().then((value){
+          appData.tokensList = value;
+          if(value != null)
+            consoleMessages.add(["Requesting Lexical Analysis Completed Successfully!", 1]);
+          else
+            consoleMessages.add(["Failed to receive lexical analysis.", 0]);
+          compile(consoleMessages);
         });
-
-        // for (var x in tokensColors){
-        //   if(x != Colors.black)print(x);
-        // }
-        appData.tokensIndices = tokensIndices;
-        appData.richTextList = richTextList;
-        appData.tokensColors = tokensColors;
-
-        print(tokensIndices);
-        print(appData.tokensList.length);
-        print(richTextList.length);
-        print(tokensColors.length);
-
-        appData.visualize();
-        progress.dismiss();
       });
+    }
 
-      // print("Here is the code << ${appData.editingController.text} >>");
+    void _VisualizeLogic(BuildContext context) {
+      // final progress = ProgressHUD.of(context);
+      if(!(appData.circleOneClicked && appData.circleTwoClicked && appData.circleThreeClicked)) {
+        if (appData.editingController.text.isEmpty) {
+          showAlertDialog(context);
+        } else {
+          callInterpreter(appData.editingController.text);
+        }
+      }
+
+      if (appData.isVisualized && appData.circleOneClicked) {
+        appData.changeCircleOneState();
+      } else if (appData.isVisualized && appData.circleTwoClicked) {
+        appData.changeCircleTwoState();
+      } else if (appData.isVisualized && appData.circleThreeClicked) {
+        appData.changeCircleThreeState();
+      } else if (appData.isVisualized && appData.circleFourClicked) {
+        appData.changeCircleFourState();
+      }
     }
 
     return ProgressHUD(
@@ -209,31 +277,7 @@ class _ModesState extends State<Modes> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          final progress = ProgressHUD.of(context);
-                          if (!appData.isVisualized) {
-                            if (appData.editingController.text.isEmpty) {
-                              showAlertDialog(context);
-                            } else {
-                              compile(progress);
-                            }
-                          } else if (appData.isVisualized &&
-                              appData.circleOneClicked) {
-                            appData.changeCircleOneState();
-                          } else if (appData.isVisualized &&
-                              appData.circleTwoClicked) {
-                            appData.changeCircleTwoState();
-                          } else if (appData.isVisualized &&
-                              appData.circleThreeClicked) {
-                            appData.changeCircleThreeState();
-                          } else if (appData.isVisualized &&
-                              appData.circleFourClicked) {
-                            appData.changeCircleFourState();
-                          } else if (appData.isVisualized &&
-                              appData.editingController.text.isEmpty) {
-                            showAlertDialog(context);
-                          } else {
-                            compile(progress);
-                          }
+                          _VisualizeLogic(context);
                         },
                         child: Text(
                           getText(),
@@ -241,14 +285,17 @@ class _ModesState extends State<Modes> {
                         ),
                         style: run_button_style,
                       ),
-                      ElevatedButton(onPressed: getPrevButtonFunc(), style: run_button_style, child: Text(
-                        "Previous",
-                        style: text_style_header_button,
-                      )),
-                      ElevatedButton(onPressed: getNextButtonFunc(), style: run_button_style, child: Text(
-                          "Next",
-                          style: text_style_header_button
-                      ))
+                      ElevatedButton(
+                          onPressed: getPrevButtonFunc(),
+                          style: run_button_style,
+                          child: Text(
+                            "Previous",
+                            style: text_style_header_button,
+                          )),
+                      ElevatedButton(
+                          onPressed: getNextButtonFunc(),
+                          style: run_button_style,
+                          child: Text("Next", style: text_style_header_button))
                     ],
                   ),
                 ),

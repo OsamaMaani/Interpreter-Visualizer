@@ -33,6 +33,7 @@ dependencies:
   flutter_progress_hud: ^2.0.0
   graphite: ^0.3.0
   bidirectional_listview: ^1.0.2+4
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:

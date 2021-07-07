@@ -20,6 +20,33 @@ class AppData with ChangeNotifier{
    List<String> _newNodeID =[];
    List<String> _nodeDataList = [];
 
+   List _consoleMessages = [];
+
+
+   List get consoleMessages => _consoleMessages;
+
+   set consoleMessages(List value) {
+    _consoleMessages = value;
+  }
+
+  void addConsoleMessage(String message, int type){ // 0 for errors, 1 otherwise
+    consoleMessages.add([message, type]);
+     var temp = List.from(consoleMessages);
+    consoleMessages = temp;
+  }
+
+   void addConsoleMessageList(List messages){ // 0 for errors, 1 otherwise
+     if(messages == null) return;
+     for(var m in messages){
+       consoleMessages.add([m[0], m[1]]);
+     }
+
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+       var temp = List.from(consoleMessages);
+       consoleMessages = temp;
+     });
+   }
+
 
    List<String> get jsonList => _jsonList;
 
@@ -34,6 +61,10 @@ class AppData with ChangeNotifier{
 
   bool get tokensChange => _tokensChange;
 
+
+   set tokensList(List<Token> value) {
+    _tokensList = value;
+  }
 
   List<Token> get tokensList => _tokensList;
 
@@ -109,13 +140,6 @@ class AppData with ChangeNotifier{
 
    void visualize(){
       _isVisualized =true;
-      notifyListeners();
-   }
-
-
-   //For testing purposes.
-   void addToken(Token token){
-     _tokensList.add(token);
       notifyListeners();
    }
 

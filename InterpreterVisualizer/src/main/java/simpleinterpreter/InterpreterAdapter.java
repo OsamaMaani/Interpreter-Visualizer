@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InterpreterAdapter {
+
     private static JSONObject invalidTokenError = new JSONObject().put("ERROR", "Invalid Token.");
     private static InterpreterAdapter interpreterAdapter = new InterpreterAdapter();
     private static Map<String, SimpleInterpreter> interpreters = new HashMap<>();
