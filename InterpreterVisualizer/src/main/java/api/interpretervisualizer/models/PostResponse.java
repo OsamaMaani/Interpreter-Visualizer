@@ -1,4 +1,4 @@
-package com.example.interpretervisualizer.models;
+package api.interpretervisualizer.models;
 public class PostResponse {
     int id;
     String message;

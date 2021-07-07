@@ -1,4 +1,4 @@
-package com.example.interpretervisualizer;
+package api.interpretervisualizer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

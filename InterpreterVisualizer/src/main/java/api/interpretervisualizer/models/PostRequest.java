@@ -1,4 +1,4 @@
-package com.example.interpretervisualizer.models;
+package api.interpretervisualizer.models;
 
 public class PostRequest {
     int id;
