@@ -20,15 +20,6 @@ class Token {
   }
 
   factory Token.fromJson(int tokenIndex, Map<String, dynamic> json) {
-    // print(json["Errors"][tokenIndex.toString()].toString());
-    // print(
-    //   json["Tokens"][tokenIndex]['type'].toString() +
-    //   json["Tokens"][tokenIndex]['lexeme'].toString() +
-    //   json["Tokens"][tokenIndex]['literal'].toString() +
-    //   json["Tokens"][tokenIndex]['line'].toString() +
-    //   json["Tokens"][tokenIndex]['start'].toString() +
-    //   json["Tokens"][tokenIndex]['end'].toString() +
-    //   json["Tokens"][tokenIndex]['category'].toString()    );
     List<String> errors = [];
     if(json["Errors"][tokenIndex.toString()] != null){
       int length = (json["Errors"][tokenIndex.toString()] as List<dynamic>).length;

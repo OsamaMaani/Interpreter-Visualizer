@@ -7,9 +7,9 @@ import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:provider/provider.dart';
 class TokensPage extends StatefulWidget {
-  final int NumberOfTokens;
+  final int numberOfTokens;
 
-  TokensPage(this.NumberOfTokens);
+  TokensPage(this.numberOfTokens);
 
   @override
   _TokensPageState createState() => _TokensPageState();
@@ -26,7 +26,7 @@ class _TokensPageState extends State<TokensPage> with TickerProviderStateMixin{
     // TODO: implement initState
     super.initState();
     durationOfSingleToken = 1500;
-    totalDuration = widget.NumberOfTokens * durationOfSingleToken;
+    totalDuration = widget.numberOfTokens * durationOfSingleToken;
     _animationController = AnimationController(
         vsync: this, duration: new Duration(milliseconds: totalDuration));
 
@@ -76,7 +76,7 @@ void dispose() {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: widget.NumberOfTokens,
+              itemCount: widget.numberOfTokens,
               itemBuilder: (context, index) {
                 return TokenItem(index, animationDuration, _animationController);
               },

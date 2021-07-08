@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
-import 'package:flutterdesktopapp/screens/full_visualization.dart';
 import 'package:flutterdesktopapp/screens/semantic_page.dart';
 import 'package:flutterdesktopapp/screens/syntactic_and_statement_page.dart';
 import 'package:flutterdesktopapp/screens/tokens_page.dart';
@@ -35,12 +34,10 @@ class _ModesState extends State<Modes> {
       if (appData.isVisualized && appData.circleOneClicked) {
         return TokensPage(appData.tokensList.length);
       } else if (appData.isVisualized && appData.circleTwoClicked) {
-        return SyntacticPage(4,
+        return SyntacticPage(appData.parsedStatementsList[appData.visualizedStatementIndex].graphs.length,
             appData.visualizedStatementIndex); //TODO add number of graphs ref
       } else if (appData.isVisualized && appData.circleThreeClicked)
         return SemanticPage();
-      else if (appData.isVisualized && appData.circleFourClicked)
-        return FullVisualization();
 
       return PageOne();
     }
@@ -107,36 +104,35 @@ class _ModesState extends State<Modes> {
     void compile(List consoleMessages) {
       appData.addConsoleMessageList(consoleMessages);
       var sourceCode = appData.editingController.text;
-      var richTextList = [],
-          tokensColors = [],
-          tokensIndices = [];
-      int lastEnd,
-          shift = 0;
+      var richTextList = [], tokensColors = [], tokensIndices = [];
+      int lastEnd, shift = 0;
       var tokensList = appData.tokensList;
 
       for (int tokenIndex = 0; tokenIndex < tokensList.length; tokenIndex++) {
         Token token = tokensList[tokenIndex];
 
-          var start = token.start - shift;
-          var end = token.end - shift;
-          if (tokenIndex > 0) { // no between text before the first token
-            var betweenText = sourceCode.substring(lastEnd + 1, start);
+        var start = token.start - shift;
+        var end = token.end - shift;
+        if (tokenIndex > 0) {
+          // no between text before the first token
+          var betweenText = sourceCode.substring(lastEnd + 1, start);
 
-            if (betweenText.length > 1 && betweenText[0] == "\n") {
-              betweenText = "\n";
-              shift++;
-              start--;
-              end--;
-            }
-            richTextList.add([betweenText, Colors.black, 0]);
-
-            tokensColors.add(Colors.black);
-            }
-          if (token.tokenType != "EOF") { // no between text after EOF
-            var tokenText = sourceCode.substring(start, end + 1);
-            richTextList.add([tokenText, Colors.black, 1]);
+          if (betweenText.length > 1 && betweenText[0] == "\n") {
+            betweenText = "\n";
+            shift++;
+            start--;
+            end--;
           }
-          lastEnd = end;
+          richTextList.add([betweenText, Colors.black, 0]);
+
+          tokensColors.add(Colors.black);
+        }
+        if (token.tokenType != "EOF") {
+          // no between text after EOF
+          var tokenText = sourceCode.substring(start, end + 1);
+          richTextList.add([tokenText, Colors.black, 1]);
+        }
+        lastEnd = end;
         tokensIndices.add(tokensColors.length);
         tokensColors.add(tokensList[tokenIndex].color);
       }
@@ -147,10 +143,6 @@ class _ModesState extends State<Modes> {
 
       appData.visualize();
     }
-
-
-
-
 
     // void compile(var progress) {
     //   var sourceCode = appData.editingController.text;
@@ -223,30 +215,46 @@ class _ModesState extends State<Modes> {
     //   // print("Here is the code << ${appData.editingController.text} >>");
     // }
 
-    void callInterpreter(String string) {
+    void callInterpreter(String string, var context) {
+      final progress = ProgressHUD.of(context);
+      progress.show();
       List consoleMessages = [];
       networkHelper
           .sendCodeToInterpreter(appData.editingController.text.toString())
           .then((resultMessages) {
-            consoleMessages = resultMessages;
-        networkHelper.getTokens().then((value){
+        consoleMessages = resultMessages;
+        networkHelper.getLexicalAnalysis().then((value) {
           appData.tokensList = value;
-          if(value != null)
-            consoleMessages.add(["Requesting Lexical Analysis Completed Successfully!", 1]);
-          else
+          if (value != null) {
+            consoleMessages.add(
+                ["Requesting Lexical Analysis Completed Successfully!", 1]);
+          } else
             consoleMessages.add(["Failed to receive lexical analysis.", 0]);
-          compile(consoleMessages);
+
+          networkHelper.getSyntacticAnalysis().then((value) {
+            appData.parsedStatementsList = value;
+            if (value != null) {
+              consoleMessages.add(
+                  ["Requesting Syntactic Analysis Completed Successfully!", 1]);
+            } else
+              consoleMessages.add(["Failed to receive syntactic analysis.", 0]);
+
+            compile(consoleMessages);
+            progress.dismiss();
+          });
         });
       });
     }
 
     void _VisualizeLogic(BuildContext context) {
       // final progress = ProgressHUD.of(context);
-      if(!(appData.circleOneClicked && appData.circleTwoClicked && appData.circleThreeClicked)) {
+      if (!(appData.circleOneClicked &&
+          appData.circleTwoClicked &&
+          appData.circleThreeClicked)) {
         if (appData.editingController.text.isEmpty) {
           showAlertDialog(context);
         } else {
-          callInterpreter(appData.editingController.text);
+          callInterpreter(appData.editingController.text, context);
         }
       }
 
@@ -269,33 +277,48 @@ class _ModesState extends State<Modes> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 40,
-                  width: 800,
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _VisualizeLogic(context);
-                        },
-                        child: Text(
-                          getText(),
-                          style: text_style_header_button,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _VisualizeLogic(context);
+                            },
+                            child: Text(
+                              getText(),
+                              style: text_style_header_button,
+                            ),
+                            style: run_button_style,
+                          ),
                         ),
-                        style: run_button_style,
                       ),
-                      ElevatedButton(
-                          onPressed: getPrevButtonFunc(),
-                          style: run_button_style,
-                          child: Text(
-                            "Previous",
-                            style: text_style_header_button,
-                          )),
-                      ElevatedButton(
-                          onPressed: getNextButtonFunc(),
-                          style: run_button_style,
-                          child: Text("Next", style: text_style_header_button))
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                              onPressed: getPrevButtonFunc(),
+                              style: run_button_style,
+                              child: Text(
+                                "Previous",
+                                style: text_style_header_button,
+                              )),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                              onPressed: getNextButtonFunc(),
+                              style: run_button_style,
+                              child: Text("Next",
+                                  style: text_style_header_button)),
+                        ),
+                      )
                     ],
                   ),
                 ),

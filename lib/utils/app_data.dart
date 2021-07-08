@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutterdesktopapp/models/statement.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 
 class AppData with ChangeNotifier{
@@ -16,7 +17,15 @@ class AppData with ChangeNotifier{
    List _tokensIndices = [];
    List<Token> _tokensList = [];
 
-   List<String> _jsonList =[];
+   List<Statement> _parsedStatementsList = [];
+
+   List<Statement> get parsedStatementsList => _parsedStatementsList;
+
+  set parsedStatementsList(List<Statement> value) {
+    _parsedStatementsList = value;
+  }
+
+  List<String> _jsonList =[];
    List<String> _newNodeID =[];
    List<String> _nodeDataList = [];
 

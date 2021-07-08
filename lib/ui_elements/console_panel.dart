@@ -26,7 +26,7 @@ class _ConsolePanelState extends State<ConsolePanel> {
                   print(index);
                   return Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: Text(consoleMessages[index][0], style: (consoleMessages[index][1] == 0 ? text_style_error : text_style_table)),
+                    child: Text("-> " + consoleMessages[consoleMessages.length - index - 1][0], style: (consoleMessages[index][1] == 0 ? text_style_console_error : text_style_console_normal)),
                   );
                 }
             )

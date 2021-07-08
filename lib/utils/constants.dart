@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 
-
-
-
-const String url_sendCode = "http://192.168.36.32:9090/interpreter/sourcecode/";
-const String url_getTokens="http://192.168.36.32:9090/interpreter/lexical?token=";
-const String url_getLexer="";
-const String url_getParser="";
-
-
 final ButtonStyle run_button_style =
-ElevatedButton.styleFrom();
+ElevatedButton.styleFrom(
+    minimumSize: Size(300, 70)
+);
 
 
 var text_style_header_button = TextStyle(
@@ -26,10 +19,16 @@ var text_style_table = TextStyle(
   fontSize: 20.0
 );
 
-var text_style_error = TextStyle(
+
+var text_style_console_normal = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 18.0
+);
+
+var text_style_console_error = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.red,
-  fontSize: 20.0
+  fontSize: 18.0
 );
 
 var text_style_highlight = TextStyle(
