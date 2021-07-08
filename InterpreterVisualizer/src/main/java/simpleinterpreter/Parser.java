@@ -361,7 +361,10 @@ class Parser {
             return new Expr.Unary(operator, right);
         }
 
-        return primary();
+
+        Expr ret = primary();
+        visitNode(nodeIdx);
+        return ret;
     }
 
     private Expr primary() {

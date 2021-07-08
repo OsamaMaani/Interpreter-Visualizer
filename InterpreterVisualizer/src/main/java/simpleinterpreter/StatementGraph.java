@@ -17,6 +17,9 @@ public class StatementGraph {
     private final JSONArray nodesData;
 
 
+    String ID = "\"id\"";
+    String NEXT = "\"next\"";
+
     private final Map<Integer, List<Integer>> consumedTokens;
     private final JSONArray errors;
 
@@ -45,12 +48,12 @@ public class StatementGraph {
         visitedNode.put(index);
         if(lastNode != -1) {
             int indexOfNodeInJSON = nodeInIndex.get(lastNode);
-            lastJSONArray.getJSONObject(indexOfNodeInJSON).append("next", Integer.toString(index));
+            lastJSONArray.getJSONObject(indexOfNodeInJSON).append(NEXT, toStringWithDoubleQuotes(index));
         }
 
         JSONObject currentNode = new JSONObject();
-        currentNode.put("id", Integer.toString(index));
-        currentNode.put("next", new JSONArray());
+        currentNode.put(ID, toStringWithDoubleQuotes(index));
+        currentNode.put(NEXT, new JSONArray());
 
         lastJSONArray.put(currentNode);
         statmentJSON.add(lastJSONArray);
@@ -98,6 +101,12 @@ public class StatementGraph {
     public List<JSONArray> getStatmentJSON() {
         return statmentJSON;
     }
+
+
+    String toStringWithDoubleQuotes(int index){
+        return "\"" + Integer.toString(index) + "\"";
+    }
+
 
 //    public List<Integer> getVisitedNode() {
 //        return visitedNode;

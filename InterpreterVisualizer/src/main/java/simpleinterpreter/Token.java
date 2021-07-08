@@ -55,7 +55,7 @@ class Token {
         JSONObject tokenJSON = new JSONObject();
         tokenJSON.put("type", type);
         tokenJSON.put("lexeme", lexeme);
-        tokenJSON.put("literal", literal);
+        tokenJSON.put("literal", (literal == null ? "" : literal.toString()));
         tokenJSON.put("line", line);
         tokenJSON.put("line", line);
         tokenJSON.put("start", start);

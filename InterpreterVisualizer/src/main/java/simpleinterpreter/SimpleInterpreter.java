@@ -39,6 +39,7 @@ public class SimpleInterpreter {
     }
 
     JSONObject getLexicalAnalysis(){
+        run();
         JSONObject lexicalAnalysis = new JSONObject();
 
         List<Token> tokens = scanner.getTokens();
@@ -47,17 +48,16 @@ public class SimpleInterpreter {
             tokensJSON.put(token.getTokenJSON());
         }
 
-        JSONArray errorsJSON = scanner.getErrors();
+        JSONObject errorsJSON = scanner.getErrors();
 
         lexicalAnalysis.put("Tokens", tokensJSON);
         lexicalAnalysis.put("Errors", errorsJSON);
-
-//        System.out.println(lexicalAnalysis);
 
         return lexicalAnalysis;
     }
 
     JSONObject getSyntacticAnalysis(){
+        run();
         JSONObject syntacticAnalysis = new JSONObject();
 
         List<StatementGraph> graph = parser.getStatmentsGraph();
@@ -71,12 +71,11 @@ public class SimpleInterpreter {
             syntacticAnalysis.append("Statements", statement);
         }
 
-        System.out.println(syntacticAnalysis);
-
         return syntacticAnalysis;
     }
 
     JSONObject getSymanticAnalysis(){
+        run();
         JSONObject symanticAnalysis = new JSONObject();
 
         if(hadError)    return symanticAnalysis;

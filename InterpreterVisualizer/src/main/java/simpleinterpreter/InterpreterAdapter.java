@@ -28,7 +28,6 @@ public class InterpreterAdapter {
             return invalidTokenError;
         }
         SimpleInterpreter interpreter = interpreters.get(token);
-        interpreter.run();
         return interpreter.getLexicalAnalysis();
     }
 
@@ -37,7 +36,6 @@ public class InterpreterAdapter {
             return invalidTokenError;
         }
         SimpleInterpreter interpreter = interpreters.get(token);
-        interpreter.run();
         return interpreter.getSyntacticAnalysis();
     }
 
@@ -46,7 +44,6 @@ public class InterpreterAdapter {
             return invalidTokenError;
         }
         SimpleInterpreter interpreter = interpreters.get(token);
-        interpreter.run();
         return interpreter.getSymanticAnalysis();
     }
 

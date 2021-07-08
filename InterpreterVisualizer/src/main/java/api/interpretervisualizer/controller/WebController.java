@@ -1,16 +1,14 @@
 package api.interpretervisualizer.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.json.JSONObject;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
 import simpleinterpreter.InterpreterAdapter;
 
 import java.security.SecureRandom;
 import java.util.Base64;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class WebController {
 
@@ -21,11 +19,13 @@ public class WebController {
     String generateToken() {
         byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
-        return base64Encoder.encodeToString(randomBytes);
+        String token = base64Encoder.encodeToString(randomBytes);
+        return token;
     }
 
     @RequestMapping("/interpreter/lexical")
     public String lexicalAnalysis(@RequestParam(value = "token") String token) {
+        System.out.println("Lexical Analysis Requested!");
         return interpreterAdapter.getLexicalAnalysis(token).toString();
     }
 
@@ -34,7 +34,10 @@ public class WebController {
         return interpreterAdapter.getSyntacticAnalysis(token).toString();
     }
 
-    @RequestMapping("/interpreter/symantic")
+    @RequestMapping("/interpreter/se" +
+            "" +
+            "" +
+            "mantic")
     public String symanticAnalysis(@RequestParam(value = "token") String token) {
         return interpreterAdapter.getSymanticAnalysis(token).toString();
     }
@@ -43,6 +46,6 @@ public class WebController {
     public String sourceCode(@RequestBody String source) {
         String generatedtoken = generateToken();
         interpreterAdapter.startInterpreter(generatedtoken, source);
-        return generatedtoken;
+        return "{\"Token\":\"" + generatedtoken + "\"}";
     }
 }

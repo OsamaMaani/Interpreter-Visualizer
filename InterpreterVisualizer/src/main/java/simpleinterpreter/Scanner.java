@@ -36,7 +36,7 @@ class Scanner {
   private final String source;
 
   private final List<Token> tokens = new ArrayList<>();
-  private final JSONArray errors = new JSONArray();
+  private final JSONObject errors = new JSONObject();
 
   private int start = 0;
   private int current = 0;
@@ -53,7 +53,7 @@ class Scanner {
     return tokens;
   }
 
-  public JSONArray getErrors() {
+  public JSONObject getErrors() {
     return errors;
   }
 
@@ -121,7 +121,8 @@ class Scanner {
         } else if (isAlpha(c)) {
           identifier();
         } else {
-          errors.put(new JSONObject().put(Integer.toString((tokens.size() + 1)), "[line " + line + "] Error: Unexpected character."));
+          errors.append(Integer.toString((tokens.size())), "[line " + line + "] Error: Unexpected character.");
+//          errors.put(new JSONObject().put(Integer.toString((tokens.size() + 1)), "[line " + line + "] Error: Unexpected character."));
           simpleInterpreter.error(line, "Unexpected character.");
         }
         break;
@@ -159,7 +160,8 @@ class Scanner {
     }
 
     if (isAtEnd()) {
-      errors.put(new JSONObject().put(Integer.toString((tokens.size() + 1)), "[line " + line + "] Error: Unterminated string."));
+      errors.append(Integer.toString((tokens.size())), "[line " + line + "] Error: Unterminated string.");
+//      errors.put(new JSONObject().put(Integer.toString((tokens.size() + 1)), "[line " + line + "] Error: Unterminated string."));
       simpleInterpreter.error(line, "Unterminated string.");
       return;
     }

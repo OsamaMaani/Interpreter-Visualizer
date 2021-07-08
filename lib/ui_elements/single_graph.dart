@@ -146,7 +146,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
               // child: ListView.builder(
               //   itemCount: widget.index + 1,
               //   itemBuilder: (context, index){
-              //     return Center(child: Text("Haha" * (index + 1), style: text_style_circle));
+              //     return Center(child: Text("Haha" * (in   dex + 1), style: text_style_circle));
               //   },
               // ),
             );
