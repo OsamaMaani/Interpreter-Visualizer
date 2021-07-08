@@ -20,6 +20,8 @@ class _TokenItemState extends State<TokenItem>{
   Animation animationColor;
   double start;
   double end;
+  bool errors = false;
+
 
   @override
   void initState() {
@@ -75,7 +77,6 @@ class _TokenItemState extends State<TokenItem>{
   // @override
   void dispose() {
     print("Token Disposed");
-    // widget.animationController.dispose();
   //   // TODO: implement dispose
     super.dispose();
   }
@@ -87,7 +88,15 @@ class _TokenItemState extends State<TokenItem>{
     var appData = Provider.of<AppData>(context);
     var tokensList = appData.tokensList;
     var tokenIndex = appData.tokensIndices[widget.index];
+    var token = tokensList[widget.index];
     var tokenGoalColor = appData.tokensColors[tokenIndex];
+
+    if (!errors && animation.value >= start) {
+      for(var error in token.errors) {
+        appData.addConsoleMessage(error, 0);
+      }
+      errors = true;
+    }
 
 
     if(tokenIndex < appData.richTextList.length) {
