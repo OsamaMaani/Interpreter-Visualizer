@@ -5,6 +5,7 @@ import 'package:flutterdesktopapp/ui_elements/card_box.dart';
 import 'package:flutterdesktopapp/ui_elements/code_text.dart';
 import 'package:flutterdesktopapp/ui_elements/console_panel.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,8 +13,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AppData(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppData>(create: (_) => AppData()),
+        ChangeNotifierProvider<UtilitiesProvider>(create: (_) => UtilitiesProvider()),
+      ],
+
       builder: (context, child){
         return Scaffold(
           appBar: AppBar(

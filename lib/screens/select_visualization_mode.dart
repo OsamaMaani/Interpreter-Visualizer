@@ -11,6 +11,7 @@ import 'package:flutterdesktopapp/screens/first_page.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:flutterdesktopapp/utils/file_processes.dart';
+import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutterdesktopapp/services/networking.dart';
@@ -29,6 +30,7 @@ class _ModesState extends State<Modes> {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
+    final utilsProvider = Provider.of<UtilitiesProvider>(context, listen: false);
 
     Widget getClickedPage() {
       if (appData.isVisualized && appData.circleOneClicked) {
@@ -63,13 +65,15 @@ class _ModesState extends State<Modes> {
     }
 
     Function getNextButtonFunc() {
-      if (appData.circleTwoClicked) {
+      if (appData.circleTwoClicked && appData.visualizedStatementIndex + 1 < appData.parsedStatementsList.length) {
         return () {
           appData.visualizedStatementIndex++;
         };
       }
       return null;
     }
+
+
 
     void showAlertDialog(BuildContext context) {
       Widget okButton = ElevatedButton(
@@ -96,13 +100,9 @@ class _ModesState extends State<Modes> {
       );
     }
 
-    Future<String> readFile() async {
-      final String data = await rootBundle.loadString('assets/tokens_file.txt');
-      return data;
-    }
-
     void compile(List consoleMessages) {
-      appData.addConsoleMessageList(consoleMessages);
+      utilsProvider.addConsoleMessageList(consoleMessages);
+
       var sourceCode = appData.editingController.text;
       var richTextList = [], tokensColors = [], tokensIndices = [];
       int lastEnd, shift = 0;
@@ -118,10 +118,10 @@ class _ModesState extends State<Modes> {
           var betweenText = sourceCode.substring(lastEnd + 1, start);
 
           if (betweenText.length > 1 && betweenText[0] == "\n") {
-            betweenText = "\n";
-            shift++;
-            start--;
-            end--;
+            // betweenText = "\n";
+            // shift += 2 * betweenText.length;
+            // start -= betweenText.length;
+            // end -= betweenText.length;
           }
           richTextList.add([betweenText, Colors.black, 0]);
 
@@ -130,6 +130,7 @@ class _ModesState extends State<Modes> {
         if (token.tokenType != "EOF") {
           // no between text after EOF
           var tokenText = sourceCode.substring(start, end + 1);
+          print(tokenText);
           richTextList.add([tokenText, Colors.black, 1]);
         }
         lastEnd = end;
@@ -138,82 +139,11 @@ class _ModesState extends State<Modes> {
       }
 
       appData.tokensIndices = tokensIndices;
-      appData.richTextList = richTextList;
+      utilsProvider.richTextList = richTextList;
       appData.tokensColors = tokensColors;
 
       appData.visualize();
     }
-
-    // void compile(var progress) {
-    //   var sourceCode = appData.editingController.text;
-    //   progress.showWithText("Compiling ...");
-    //   readFile().then((value) {
-    //     var richTextList = [], tokensColors = [], tokensIndices = [];
-    //     int counter = 0, lastEnd, shift = 0;
-    //     appData.tokensList.clear();
-    //     LineSplitter.split(value).forEach((line) {
-    //       // print(" here is the $line");
-    //       var splittedList = line.split(",");
-    //
-    //       if (splittedList[0] != "EOF") {
-    //         var start = int.parse(splittedList[4]) - shift;
-    //         var end = int.parse(splittedList[5]) - shift;
-    //         if (counter > 0) {
-    //           var betweenText = sourceCode.substring(lastEnd + 1, start);
-    //           if (betweenText.length > 1 && betweenText[0] == "\n") {
-    //             betweenText = "\n";
-    //             shift++;
-    //             start--;
-    //             end--;
-    //           }
-    //           richTextList.add([betweenText, Colors.black, 0]);
-    //           tokensColors.add(Colors.black);
-    //         }
-    //         print("RichText  : "+(richTextList.length > 0 ? richTextList.last : ""));
-    //
-    //         var tokenText = sourceCode.substring(start, end + 1);
-    //
-    //         richTextList.add([tokenText, Colors.black, 1]);
-    //
-    //         lastEnd = end;
-    //       }
-    //       counter++;
-    //
-    //       appData.tokensList.add(Token(
-    //           splittedList[0],
-    //           splittedList[1],
-    //           splittedList[2],
-    //           int.parse(splittedList[3]),
-    //           int.parse(splittedList[4]),
-    //           int.parse(splittedList[5]),
-    //           int.parse(splittedList[6])));
-    //
-    //       // print(tokensColors.length);
-    //       tokensIndices.add(tokensColors.length);
-    //       tokensColors.add(appData.tokensList.last.color);
-    //
-    //       // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    //       //print("added to the list");
-    //     });
-    //
-    //     // for (var x in tokensColors){
-    //     //   if(x != Colors.black)print(x);
-    //     // }
-    //     appData.tokensIndices = tokensIndices;
-    //     appData.richTextList = richTextList;
-    //     appData.tokensColors = tokensColors;
-    //
-    //     print(tokensIndices);
-    //     print(appData.tokensList.length);
-    //     print(richTextList.length);
-    //     print(tokensColors.length);
-    //
-    //     appData.visualize();
-    //     progress.dismiss();
-    //   });
-    //
-    //   // print("Here is the code << ${appData.editingController.text} >>");
-    // }
 
     void callInterpreter(String string, var context) {
       final progress = ProgressHUD.of(context);
@@ -246,27 +176,36 @@ class _ModesState extends State<Modes> {
       });
     }
 
-    void _VisualizeLogic(BuildContext context) {
-      // final progress = ProgressHUD.of(context);
-      if (!(appData.circleOneClicked &&
-          appData.circleTwoClicked &&
-          appData.circleThreeClicked)) {
-        if (appData.editingController.text.isEmpty) {
-          showAlertDialog(context);
-        } else {
-          callInterpreter(appData.editingController.text, context);
-        }
+    void _VisualizeButtonLogic(BuildContext context) {
+      appData.isVisualizationReady = false;
+      utilsProvider.clearConsoleMessages();
+      if (appData.editingController.text.isEmpty) {
+        showAlertDialog(context);
+      } else {
+        callInterpreter(appData.editingController.text, context);
       }
+    }
 
-      if (appData.isVisualized && appData.circleOneClicked) {
+    void _BackButtonLogic() {
+      if (appData.circleOneClicked) {
         appData.changeCircleOneState();
-      } else if (appData.isVisualized && appData.circleTwoClicked) {
+      } else if (appData.circleTwoClicked) {
         appData.changeCircleTwoState();
-      } else if (appData.isVisualized && appData.circleThreeClicked) {
+      } else if (appData.circleThreeClicked) {
         appData.changeCircleThreeState();
-      } else if (appData.isVisualized && appData.circleFourClicked) {
-        appData.changeCircleFourState();
       }
+    }
+
+    Function getVisualizeButtonFunc(var context) {
+      var atLeastOneCircle = appData.atLeastOneCircle();
+
+      if(atLeastOneCircle){
+        return (){_BackButtonLogic();};
+      }
+      if(appData.isVisualizationReady || atLeastOneCircle)
+        return (){_VisualizeButtonLogic(context);
+      };
+      return null;
     }
 
     return ProgressHUD(
@@ -286,9 +225,7 @@ class _ModesState extends State<Modes> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton(
-                            onPressed: () {
-                              _VisualizeLogic(context);
-                            },
+                            onPressed: getVisualizeButtonFunc(context),
                             child: Text(
                               getText(),
                               style: text_style_header_button,

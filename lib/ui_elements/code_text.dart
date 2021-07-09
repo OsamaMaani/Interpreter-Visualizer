@@ -20,14 +20,19 @@ class _CodeTextState extends State<CodeText> {
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context, listen: true);
     final initial_code = "var x = 3;\nvar y = 10;\nprint 5 + 3;";
-    appData.editingController.text = initial_code;
+    // appData.editingController.text = initial_code;
+    var atLeastOneCircle = appData.atLeastOneCircle();
+
     return SingleChildScrollView(
       child: SizedBox(
         height: 800,
         width: 1200,
-        child: ((appData.isVisualized && (appData.circleOneClicked || appData.circleTwoClicked || appData.circleThreeClicked)))
+        child: (atLeastOneCircle)
             ? TextHighlighter()
             : TextField(
+                onChanged: (text){
+                  appData.isVisualizationReady = true;
+                },
                 controller: appData.editingController,
                 autofocus: true,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),

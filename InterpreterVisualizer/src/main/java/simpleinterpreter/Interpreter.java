@@ -5,7 +5,7 @@ import java.util.List;
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     SimpleInterpreter simpleInterpreter;
-    public Interpreter() {
+    public Interpreter(SimpleInterpreter simpleInterpreter) {
         this.simpleInterpreter = simpleInterpreter;
     }
 

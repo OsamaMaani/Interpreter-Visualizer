@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
+import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:provider/provider.dart';
 import 'colored_card_box.dart';
 
@@ -20,7 +21,7 @@ class _TokenItemState extends State<TokenItem>{
   Animation animationColor;
   double start;
   double end;
-  bool errors = false;
+  bool showErrors = true;
 
 
   @override
@@ -47,10 +48,9 @@ class _TokenItemState extends State<TokenItem>{
     );
 
 
-    var appdata = Provider.of<AppData>(context, listen: false);
-
-    var tokenIndex = appdata.tokensIndices[widget.index];
-    var tokenGoalColor = appdata.tokensColors[tokenIndex];
+    var appData = Provider.of<AppData>(context, listen: false);
+    var tokenIndex = appData.tokensIndices[widget.index];
+    var tokenGoalColor = appData.tokensColors[tokenIndex];
 
 
     animationColor = ColorTween(
@@ -86,27 +86,30 @@ class _TokenItemState extends State<TokenItem>{
     // print(widget.index.toString() + " " + animation.value.toString());
 
     var appData = Provider.of<AppData>(context);
+    final utilsProvider = Provider.of<UtilitiesProvider>(context);
+
     var tokensList = appData.tokensList;
     var tokenIndex = appData.tokensIndices[widget.index];
     var token = tokensList[widget.index];
     var tokenGoalColor = appData.tokensColors[tokenIndex];
 
-    if (!errors && animation.value >= start) {
-      for(var error in token.errors) {
-        appData.addConsoleMessage(error, 0);
-      }
-      errors = true;
-    }
 
 
-    if(tokenIndex < appData.richTextList.length) {
-      appData.richTextList[tokenIndex][1] = animationColor.value;
-      //   appData.richTextList[tokenIndex][1] = (animationColor.value == tokenGoalColor ? animationColor.value : Colors.black);
+
+    if(tokenIndex < utilsProvider.richTextList.length) {
+      utilsProvider.richTextList[tokenIndex][1] = animationColor.value;
     }
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        var temp = List.from(appData.richTextList);
-        appData.richTextList = temp;
+        if (showErrors && animation.value >= start) {
+          for(var error in token.errors) {
+            utilsProvider.addConsoleMessage(error, 0);
+          }
+          showErrors = false;
+        }
+
+        var temp = List.from(utilsProvider.richTextList);
+        utilsProvider.richTextList = temp;
       });
 
       return Opacity(

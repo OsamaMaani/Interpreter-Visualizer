@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:graphite/core/matrix.dart';
 import 'package:graphite/graphite.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +18,12 @@ class SingleGraph extends StatefulWidget {
   _SingleGraphState createState() => _SingleGraphState();
 }
 
-class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStateMixin{
+class _SingleGraphState extends State<SingleGraph> {
   Animation animation;
   Animation animationColor;
   double start;
   double end;
+  var showErrors = true;
 
   @override
   void initState() {
@@ -32,7 +35,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
 
 
 
-    animation = Tween<double>(
+    animation = Tween(
       begin: 0.0,
       end: 1.0,
     ).animate(
@@ -46,9 +49,12 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
       ),
     );
 
+
+
+
     // animationColor = ColorTween(
     //   begin: Colors.black,
-    //   end: tokenGoalColor,
+    //   end: Colors.red,
     // ).animate(
     //   CurvedAnimation(
     //     parent: widget.animationController,
@@ -67,6 +73,7 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
     });
 
   }
+
 
   @override
   void dispose() {
@@ -134,15 +141,41 @@ class _SingleGraphState extends State<SingleGraph> with SingleTickerProviderStat
     //
     // var listOfGraphs = [listOfJSON1, listOfJSON2];
 
-    final appData = Provider.of<AppData>(context);
-    var currentStatement = appData.parsedStatementsList[widget.statementIndex];
-    var graph = nodeInputFromJson(currentStatement.graphs[widget.index].toString());
     // var neNodeID = ["A", "B", "C", "D"];
 
 
-    if(animation.value > 0 && animation.value < 1){
-      // print(widget.index);
+    var appData = Provider.of<AppData>(context);
+    var currentStatement = appData.parsedStatementsList[widget.statementIndex];
+    var graph = nodeInputFromJson(currentStatement.graphs[widget.index].toString());
+
+
+
+    final utilsProvider = Provider.of<UtilitiesProvider>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      var currentErrors = currentStatement.errors[widget.index];
+      if (showErrors && currentErrors != null && currentErrors.isNotEmpty) {
+        for (var error in currentErrors) {
+          utilsProvider.addConsoleMessage(error, 0);
+        }
+        showErrors = false;
+      }
+
+
+
+    var consumedTokens = currentStatement.consumedTokens[widget.index];
+    if(consumedTokens != null && consumedTokens.isNotEmpty) {
+      for (int token in consumedTokens) {
+        var tokenIndex = appData.tokensIndices[token];
+        var tokenGoalColor = appData.tokensColors[tokenIndex];
+        utilsProvider.richTextList[tokenIndex][1] = tokenGoalColor;
+      }
+      var temp1 = List.from(utilsProvider.richTextList);
+      utilsProvider.richTextList = temp1;
     }
+    });
+
 
 
     return Opacity(

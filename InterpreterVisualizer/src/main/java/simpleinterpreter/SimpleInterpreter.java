@@ -34,7 +34,7 @@ public class SimpleInterpreter {
         parser.parse();
         List<Stmt> statements = parser.getStatements();
         if (hadError) return;
-        interpreter = new Interpreter();
+        interpreter = new Interpreter(this);
         interpreter.interpret(statements);
     }
 

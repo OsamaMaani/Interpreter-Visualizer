@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:provider/provider.dart';
 
 class TextHighlighter extends StatefulWidget {
@@ -17,11 +18,9 @@ class _TextHighlighterState extends State<TextHighlighter> {
 
   @override
   Widget build(BuildContext context) {
-    final appData = Provider.of<AppData>(context,listen: true);
-    var list = appData.richTextList;
-    // bool getTokensCnage(){
-    //   return (appData.tokensChange || !(appData.tokensChange));
-    // }
+    final utilsProvider = Provider.of<UtilitiesProvider>(context);
+    var list = utilsProvider.richTextList;
+
     return Container(
       child: RichText(
           text:

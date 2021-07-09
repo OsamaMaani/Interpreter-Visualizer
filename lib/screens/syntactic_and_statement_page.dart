@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/ui_elements/freescrollview.dart';
+import 'package:flutterdesktopapp/ui_elements/single.dart';
 import 'package:flutterdesktopapp/ui_elements/single_graph.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:provider/provider.dart';
@@ -42,17 +43,48 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
   double animationDuration;
   int durationOfSingleGraph;
   int totalDuration;
+  int graphIndex = 0;
+  Animation animation;
 
   @override
   void initState() {
     super.initState();
-    durationOfSingleGraph = 1500;
+    durationOfSingleGraph = 900;
     totalDuration = widget.numberOfGraphs * durationOfSingleGraph;
     _animationController = AnimationController(
         vsync: this, duration: new Duration(milliseconds: totalDuration));
 
+
+
+    animation = ColorTween(
+      begin: Colors.black45,
+      end: Colors.blue,
+    ).animate(_animationController);
+
+    _animationController.addListener((){
+      if(this.mounted)
+        setState(() {
+        });
+    });
+
+
     animationDuration = durationOfSingleGraph / totalDuration;
     _animationController.forward();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    var start = (animationDuration * graphIndex).toDouble();
+    var end = start + animationDuration;
+
+    start *= totalDuration;
+    end *= totalDuration;
+
+    if(_animationController.lastElapsedDuration != null && _animationController.lastElapsedDuration.inMilliseconds.toDouble() > end){
+      graphIndex++;
+    }
+    // TODO: implement setState
+    super.setState(fn);
   }
 
   @override
@@ -62,18 +94,15 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
       child: FreeScrollView(
         child: SizedBox(
-          height: 2000,
-          width: 800,
+          height: 3000,
+          width: 1000,
           child: Container(
-            child: Stack(
-              children: List.generate(widget.numberOfGraphs, (index) => SingleGraph(index, widget.statementIndex, _animationController, animationDuration)),
-            ),
+            child: SingleGraph(graphIndex, widget.statementIndex, _animationController, animationDuration),
           ),
         ),
       ),

@@ -36,6 +36,7 @@ class NetworkHelper {
 
   Future<List> sendCodeToInterpreter(String code) async{
     List consoleMessages = [];
+
     final response = await http.post(
       Uri.parse('$ip_address:$port$url_sendCode'),
 
@@ -46,16 +47,14 @@ class NetworkHelper {
       body: code,
     );
 
-
-
     if (response.statusCode == 200) {
       consoleMessages.add(["Connection Established!", 1]);
       consoleMessages.add(["Authentication Token Received Successfully!", 1]);
       token = json.decode(response.body)["Token"];
     }else {
       consoleMessages.add(["Failed to send the code.", 0]);
-      throw Exception('Failed to send the code.');
     }
+
     return consoleMessages;
   }
 
@@ -66,7 +65,6 @@ class NetworkHelper {
       // print(responseParser.listOfTokens(response.body));
       return  responseParser.listOfTokens(response.body);
     }else{
-      throw Exception('Failed to receive lexical analysis.');
     }
   }
 
@@ -76,7 +74,6 @@ class NetworkHelper {
 
       return  responseParser.listOfParsedStatements(response.body);
     }else{
-      throw Exception('Failed to receive syntactic analysis.');
     }
   }
 

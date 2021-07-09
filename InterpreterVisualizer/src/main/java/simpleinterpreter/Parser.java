@@ -66,10 +66,12 @@ class Parser {
     }
 
     void parse() {
+        int nodeIdx = nodeIndex;
         while (!isAtEnd()) {
             addNewStatement();
             addNewNode("Program Entry");
             statements.add(declaration());
+            visitNode(nodeIdx);
         }
     }
 
