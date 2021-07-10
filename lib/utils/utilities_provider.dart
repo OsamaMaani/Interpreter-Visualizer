@@ -1,8 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 class UtilitiesProvider  with ChangeNotifier{
   List _consoleMessages = [];
-
 
   List get consoleMessages => _consoleMessages;
 
@@ -41,6 +41,11 @@ class UtilitiesProvider  with ChangeNotifier{
     notifyListeners();
   }
 
+  void resetRichTextListColors() {
+    var len = _richTextList.length;
+    for(int i = 0;i < len;i++)
+      _richTextList[i][1] = Colors.black;
+  }
 
 
 

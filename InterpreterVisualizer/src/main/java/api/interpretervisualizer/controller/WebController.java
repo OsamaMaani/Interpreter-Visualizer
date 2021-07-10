@@ -1,6 +1,5 @@
 package api.interpretervisualizer.controller;
 
-import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import simpleinterpreter.InterpreterAdapter;
@@ -38,8 +37,8 @@ public class WebController {
             "" +
             "" +
             "mantic")
-    public String symanticAnalysis(@RequestParam(value = "token") String token) {
-        return interpreterAdapter.getSymanticAnalysis(token).toString();
+    public String semanticAnalysis(@RequestParam(value = "token") String token) {
+        return interpreterAdapter.getSemanticAnalysis(token).toString();
     }
 
     @RequestMapping(value = "/interpreter/sourcecode", method = RequestMethod.POST)

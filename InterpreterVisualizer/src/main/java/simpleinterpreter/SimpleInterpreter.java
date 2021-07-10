@@ -74,13 +74,13 @@ public class SimpleInterpreter {
         return syntacticAnalysis;
     }
 
-    JSONObject getSymanticAnalysis(){
+    JSONObject getSemanticAnalysis(){
         run();
-        JSONObject symanticAnalysis = new JSONObject();
+        JSONObject semanticAnalysis = new JSONObject();
 
-        if(hadError)    return symanticAnalysis;
+        if(hadError)    return semanticAnalysis;
 
-        return symanticAnalysis;
+        return semanticAnalysis;
     }
 
     void error(Token token, String message) {

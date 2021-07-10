@@ -13,10 +13,12 @@ class Statement{
   factory Statement.fromJson(Map<String, dynamic> json) {
     List nodesDataJSON = (json["Nodes"] as List<dynamic>);
     List nodesData = [];
-    for(int nodeIndex = 0 ;nodeIndex<nodesDataJSON.length;nodeIndex++){
-      String nodeData = nodesDataJSON[nodeIndex][nodeIndex.toString()];
-      nodesData.add(nodeData);
-    }
+    // for(int nodeIndex = 0 ;nodeIndex<nodesDataJSON.length;nodeIndex++){
+    //   String nodeData = nodesDataJSON[nodeIndex][nodeIndex.toString()];
+    //   nodesData.add(nodeData);
+      nodesData = nodesDataJSON;
+      print(nodesData[0]["0"].length);
+    // }
 
     List graphs = (json["Graphs"] as List<dynamic>);
     print(graphs[2].toString());

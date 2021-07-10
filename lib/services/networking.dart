@@ -18,7 +18,7 @@ class NetworkHelper {
   }
 
 
-  static const String ip_address = "http://192.168.1.78";
+  static const String ip_address = "http://192.168.8.102";
   static const String port = "9090";
   static const String url_sendCode = "/interpreter/sourcecode/";
   static const String url_getLexical="/interpreter/lexical?token=";

@@ -1,9 +1,15 @@
+
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutterdesktopapp/ui_elements/freescrollview.dart';
-import 'package:flutterdesktopapp/ui_elements/single.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutterdesktopapp/ui_elements/single_graph.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
+
 
 
 class SyntacticPage extends StatefulWidget {
@@ -46,6 +52,10 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
   int graphIndex = 0;
   Animation animation;
 
+  ScreenshotController screenshotController = ScreenshotController();
+  int _counter = 0;
+  Uint8List _imageFile;
+
   @override
   void initState() {
     super.initState();
@@ -54,12 +64,6 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
     _animationController = AnimationController(
         vsync: this, duration: new Duration(milliseconds: totalDuration));
 
-
-
-    animation = ColorTween(
-      begin: Colors.black45,
-      end: Colors.blue,
-    ).animate(_animationController);
 
     _animationController.addListener((){
       if(this.mounted)
@@ -97,14 +101,46 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FreeScrollView(
-        child: SizedBox(
-          height: 3000,
-          width: 1000,
-          child: Container(
-            child: SingleGraph(graphIndex, widget.statementIndex, _animationController, animationDuration),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Column(
+            children: [ElevatedButton(onPressed: (){
+              screenshotController.capture().then((Uint8List image) async {
+                //Capture Done
+                setState(() {
+                  _imageFile = image;
+                  print("hi");
+                });
+
+
+                Directory directory = await getTemporaryDirectory();
+                String fileName = "Hi.png";
+                var p = directory.path;
+                var path = '$p';
+                print(path);
+                screenshotController.captureAndSave(path, fileName:fileName);
+
+              }).catchError((onError) {
+                print(onError);
+              });
+
+
+            }, child: Text("Capture The Graph")),
+              Screenshot(
+                controller: screenshotController,
+                child: SizedBox(
+                  height: 500000000,
+                  width: 500000000,
+                  child: Container(
+                    child: SingleGraph(graphIndex, widget.statementIndex, _animationController, animationDuration),
+                    ),
+                  ),
+              ),
+            ],
           ),
-        ),
+          ),
       ),
     );
   }

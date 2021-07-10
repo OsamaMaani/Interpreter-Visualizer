@@ -40,12 +40,12 @@ public class InterpreterAdapter {
         return interpreter.getSyntacticAnalysis();
     }
 
-    public JSONObject getSymanticAnalysis(String token){
+    public JSONObject getSemanticAnalysis(String token){
         if(interpreters.get(token) == null){
             return invalidTokenError;
         }
         SimpleInterpreter interpreter = interpreters.get(token);
-        return interpreter.getSymanticAnalysis();
+        return interpreter.getSemanticAnalysis();
     }
 
 }

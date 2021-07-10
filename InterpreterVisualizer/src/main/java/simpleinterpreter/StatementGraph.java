@@ -14,7 +14,7 @@ public class StatementGraph {
     private final List<JSONArray> statmentJSON;
     private final JSONArray visitedNode;
 
-    private final JSONArray nodesData;
+    private final List<JSONObject> nodesData;
 
 
     String ID = "\"id\"";
@@ -33,13 +33,23 @@ public class StatementGraph {
         consumedTokens = new HashMap<>();
         visitedNode = new JSONArray();
         errors = new JSONArray();
-        nodesData = new JSONArray();
+        nodesData = new ArrayList<>();
     }
 
 
+    void addNodeData(int index, String data){
+        //Data
+        JSONObject lastDataJSONObject = new JSONObject(getLastJSONObject().toString());
+        if(data != "") {
+            lastDataJSONObject.append(Integer.toString(index), data);
+        }
+        nodesData.add(lastDataJSONObject);
+    }
+
     void addNewNode(int index, String data){
         nodeInIndex.put(index, getLastJSONArray().length());
-        nodesData.put(new JSONObject().put(Integer.toString(index), data));
+
+        addNodeData(index, data);
 
         JSONArray lastJSONArray = new JSONArray(getLastJSONArray().toString());
 
@@ -59,8 +69,10 @@ public class StatementGraph {
         statmentJSON.add(lastJSONArray);
     }
 
-    void visitNode(int index){
+    void visitNode(int index, String data){
         visitedNode.put(index);
+
+        addNodeData(index, data);
 
         // keep the lists consistent
         JSONArray last = getLastJSONArray();
@@ -88,6 +100,13 @@ public class StatementGraph {
         if(size == 0)
             return new JSONArray();
         return statmentJSON.get(size - 1);
+    }
+
+    JSONObject getLastJSONObject(){
+        int size = nodesData.size();
+        if(size == 0)
+            return new JSONObject();
+        return nodesData.get(size - 1);
     }
 
     int getLastVisitedNodeIndex(){
@@ -135,7 +154,11 @@ public class StatementGraph {
     }
 
     public JSONArray getNodesData() {
-        return nodesData;
+        JSONArray nodesDataJSONArray = new JSONArray();
+        for(JSONObject jsonObject : nodesData) {
+            nodesDataJSONArray.put(jsonObject);
+        }
+        return nodesDataJSONArray;
     }
 
     public JSONArray getConsumedTokens() {

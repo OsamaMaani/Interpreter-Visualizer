@@ -43,6 +43,20 @@ var text_style_circle = TextStyle(
     color: Colors.white
 );
 
+
+var text_style_graph_title = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 12.0,
+    color: Colors.white
+);
+
+var text_style_graph_text = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 10.0,
+    color: Colors.white
+);
+
+
 var text_style_table_row = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 14.0,

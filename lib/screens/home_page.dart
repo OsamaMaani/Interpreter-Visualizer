@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/screens/select_visualization_mode.dart';
+import 'package:flutterdesktopapp/screens/tokens_page.dart';
 import 'package:flutterdesktopapp/ui_elements/card_box.dart';
 import 'package:flutterdesktopapp/ui_elements/code_text.dart';
 import 'package:flutterdesktopapp/ui_elements/console_panel.dart';
@@ -46,7 +47,12 @@ class HomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(child: CardBox(child: Modes())),
+                      Expanded(
+                          flex: 9,
+                          child: CardBox(child: Modes())),
+                      Expanded(
+                          flex: 3,
+                          child: CardBox(child: Container())),
                     ],
                   ),
                 ),

@@ -37,9 +37,11 @@ class _ModesState extends State<Modes> {
         return TokensPage(appData.tokensList.length);
       } else if (appData.isVisualized && appData.circleTwoClicked) {
         return SyntacticPage(appData.parsedStatementsList[appData.visualizedStatementIndex].graphs.length,
-            appData.visualizedStatementIndex); //TODO add number of graphs ref
-      } else if (appData.isVisualized && appData.circleThreeClicked)
-        return SemanticPage();
+            appData.visualizedStatementIndex);
+      } else if (appData.isVisualized && appData.circleThreeClicked) {
+        return SemanticPage(appData.parsedStatementsList[appData.visualizedStatementIndex].graphs.length,
+            appData.visualizedStatementIndex);
+      }
 
       return PageOne();
     }
@@ -194,6 +196,8 @@ class _ModesState extends State<Modes> {
       } else if (appData.circleThreeClicked) {
         appData.changeCircleThreeState();
       }
+      utilsProvider.resetRichTextListColors();
+      appData.visualizedStatementIndex = 0;
     }
 
     Function getVisualizeButtonFunc(var context) {
@@ -241,7 +245,7 @@ class _ModesState extends State<Modes> {
                               onPressed: getPrevButtonFunc(),
                               style: run_button_style,
                               child: Text(
-                                "Previous",
+                                "Previous Statement",
                                 style: text_style_header_button,
                               )),
                         ),
@@ -252,7 +256,7 @@ class _ModesState extends State<Modes> {
                           child: ElevatedButton(
                               onPressed: getNextButtonFunc(),
                               style: run_button_style,
-                              child: Text("Next",
+                              child: Text("Next Statement",
                                   style: text_style_header_button)),
                         ),
                       )
