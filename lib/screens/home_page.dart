@@ -5,10 +5,14 @@ import 'package:flutterdesktopapp/screens/tokens_page.dart';
 import 'package:flutterdesktopapp/ui_elements/card_box.dart';
 import 'package:flutterdesktopapp/ui_elements/code_text.dart';
 import 'package:flutterdesktopapp/ui_elements/console_panel.dart';
+import 'package:flutterdesktopapp/ui_elements/control_buttons.dart';
 import 'package:flutterdesktopapp/ui_elements/symbol_table.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:flutterdesktopapp/utils/graphs_provider.dart';
 import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'ast_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
@@ -16,6 +20,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
+    // final graphProvider = Provider.of<GraphProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,13 +48,19 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Expanded(flex: 1, child: CardBox(child: ControlButtons())),
                   Expanded(
-                      flex: 9,
-                      child: CardBox(child: Modes())),
+                      flex: 7,
+                      child: Row(
+                        children: [
+                          Expanded(flex: 1, child: CardBox(child: Modes())),
+                          Visibility(visible: appData.circleTwoClicked, child: Expanded(flex: 1, child: CardBox(child: ASTPage()))),
+                        ],
+                      )),
                   Visibility(
                     visible: (appData.circleThreeClicked),
                     child: Expanded(
-                        flex: 3,
+                        flex: 3 ,
                         child: CardBox(child: SymbolTable(appData.tokensList.length))),
                   ),
                 ],

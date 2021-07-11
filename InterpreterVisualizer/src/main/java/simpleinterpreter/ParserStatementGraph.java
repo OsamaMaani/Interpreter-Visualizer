@@ -10,15 +10,27 @@ import java.util.Map;
 
 public class ParserStatementGraph {
 
+    public AST getAstGraph() {
+        return astGraph;
+    }
+
+    private final AST astGraph;
+
     //same size
     private final List<JSONArray> statmentJSON;
     private final JSONArray visitedNode;
 
+    public JSONArray getAstGraphIndexSync() {
+        return astGraphIndexSync;
+    }
+
+    private final JSONArray astGraphIndexSync;
+
     private final List<JSONObject> nodesData;
 
 
-    String ID = "\"id\"";
-    String NEXT = "\"next\"";
+    private final String ID = "\"id\"";
+    private final String NEXT = "\"next\"";
 
     private final Map<Integer, List<Integer>> consumedTokens;
     private final JSONArray errors;
@@ -28,14 +40,20 @@ public class ParserStatementGraph {
     private final Map<Integer, Integer> nodeInIndex;
 
     ParserStatementGraph() {
+        astGraph = new AST();
         statmentJSON = new ArrayList<>();
         nodeInIndex = new HashMap<>();
         consumedTokens = new HashMap<>();
         visitedNode = new JSONArray();
+        astGraphIndexSync = new JSONArray();
         errors = new JSONArray();
         nodesData = new ArrayList<>();
     }
 
+    void addASTNode(int parsingNodeIndex, int astNodeindex, List<String> data, List<Integer> neighbours){
+        astGraph.addNewNode(astNodeindex, data, neighbours);
+        visitNode(parsingNodeIndex, "");
+    }
 
     void addNodeData(int index, String data){
         //Data
@@ -67,6 +85,7 @@ public class ParserStatementGraph {
 
         lastJSONArray.put(currentNode);
         statmentJSON.add(lastJSONArray);
+        astGraphIndexSync.put(astGraph.getASTGraphsSize() - 1);
     }
 
     void visitNode(int index, String data){
@@ -77,6 +96,7 @@ public class ParserStatementGraph {
         // keep the lists consistent
         JSONArray last = getLastJSONArray();
         statmentJSON.add(last);
+        astGraphIndexSync.put(astGraph.getASTGraphsSize() - 1);
     }
 
     void consumeToken(int tokenIndex){

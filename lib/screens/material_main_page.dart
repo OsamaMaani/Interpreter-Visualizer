@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:flutterdesktopapp/utils/graphs_provider.dart';
 import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
         providers: [
         ChangeNotifierProvider<AppData>(create: (_) => AppData()),
     ChangeNotifierProvider<UtilitiesProvider>(create: (_) => UtilitiesProvider()),
+    ChangeNotifierProvider<GraphProvider>(create: (_) => GraphProvider()),
     ],
     builder: (context, child){
       return MaterialApp(

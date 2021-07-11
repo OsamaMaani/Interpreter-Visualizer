@@ -1,7 +1,5 @@
 package simpleinterpreter;
 
-import java.util.List;
-
 abstract class Expr {
   interface Visitor<R> {
     R visitAssignExpr(Assign expr);
@@ -12,12 +10,14 @@ abstract class Expr {
     R visitUnaryExpr(Unary expr);
     R visitVariableExpr(Variable expr);
   }
-
+  
+  int astNodeIndex;
 
   static class Assign extends Expr {
-    Assign(Token name, Expr value) {
+    Assign(Token name, Expr value, int astNodeIndex) {
       this.name = name;
       this.value = value;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -29,12 +29,12 @@ abstract class Expr {
     final Expr value;
   }
 
-
   static class Binary extends Expr {
-    Binary(Expr left, Token operator, Expr right) {
+    Binary(Expr left, Token operator, Expr right, int astNodeIndex) {
       this.left = left;
       this.operator = operator;
       this.right = right;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -47,10 +47,10 @@ abstract class Expr {
     final Expr right;
   }
 
-
   static class Grouping extends Expr {
-    Grouping(Expr expression) {
+    Grouping(Expr expression, int astNodeIndex) {
       this.expression = expression;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -61,10 +61,10 @@ abstract class Expr {
     final Expr expression;
   }
 
-
   static class Literal extends Expr {
-    Literal(Object value) {
+    Literal(Object value, int astNodeIndex) {
       this.value = value;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -76,10 +76,11 @@ abstract class Expr {
   }
 
   static class Logical extends Expr {
-    Logical(Expr left, Token operator, Expr right) {
+    Logical(Expr left, Token operator, Expr right, int astNodeIndex) {
       this.left = left;
       this.operator = operator;
       this.right = right;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -92,11 +93,11 @@ abstract class Expr {
     final Expr right;
   }
 
-
   static class Unary extends Expr {
-    Unary(Token operator, Expr right) {
+    Unary(Token operator, Expr right, int astNodeIndex) {
       this.operator = operator;
       this.right = right;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -108,10 +109,10 @@ abstract class Expr {
     final Expr right;
   }
 
-
   static class Variable extends Expr {
-    Variable(Token name) {
+    Variable(Token name, int astNodeIndex) {
       this.name = name;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override

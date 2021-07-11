@@ -13,6 +13,12 @@ var text_style_header_button = TextStyle(
 );
 
 
+var text_style_phase_title = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 20
+);
+
 
 var text_style_table = TextStyle(
   fontWeight: FontWeight.bold,

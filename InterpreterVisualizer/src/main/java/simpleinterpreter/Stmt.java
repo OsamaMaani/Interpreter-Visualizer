@@ -12,10 +12,12 @@ abstract class Stmt {
     R visitWhileStmt(While stmt);
   }
 
+  int astNodeIndex;
 
   static class Block extends Stmt {
-    Block(List<Stmt> statements) {
+    Block(List<Stmt> statements, int astNodeIndex) {
       this.statements = statements;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -26,10 +28,10 @@ abstract class Stmt {
     final List<Stmt> statements;
   }
 
-
   static class Expression extends Stmt {
-    Expression(Expr expression) {
+    Expression(Expr expression, int astNodeIndex) {
       this.expression = expression;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -41,10 +43,14 @@ abstract class Stmt {
   }
 
   static class If extends Stmt {
-    If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+    If(Expr condition,
+       Stmt thenBranch,
+       Stmt elseBranch,
+       int astNodeIndex) {
       this.condition = condition;
       this.thenBranch = thenBranch;
       this.elseBranch = elseBranch;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -58,8 +64,9 @@ abstract class Stmt {
   }
 
   static class Print extends Stmt {
-    Print(Expr expression) {
+    Print(Expr expression, int astNodeIndex) {
       this.expression = expression;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -70,11 +77,11 @@ abstract class Stmt {
     final Expr expression;
   }
 
-
   static class Var extends Stmt {
-    Var(Token name, Expr initializer) {
+    Var(Token name, Expr initializer, int astNodeIndex) {
       this.name = name;
       this.initializer = initializer;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -87,9 +94,10 @@ abstract class Stmt {
   }
 
   static class While extends Stmt {
-    While(Expr condition, Stmt body) {
+    While(Expr condition, Stmt body, int astNodeIndex) {
       this.condition = condition;
       this.body = body;
+      this.astNodeIndex = astNodeIndex;
     }
 
     @Override
@@ -100,6 +108,7 @@ abstract class Stmt {
     final Expr condition;
     final Stmt body;
   }
+
 
   abstract <R> R accept(Visitor<R> visitor);
 }

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterdesktopapp/ui_elements/single_graph.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
+import 'package:flutterdesktopapp/utils/constants.dart';
+import 'package:flutterdesktopapp/utils/graphs_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -85,6 +87,7 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
     end *= totalDuration;
 
     if(_animationController.lastElapsedDuration != null && _animationController.lastElapsedDuration.inMilliseconds.toDouble() > end){
+      print("Test: " + graphIndex.toString());
       graphIndex++;
     }
     // TODO: implement setState
@@ -100,36 +103,22 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      graphProvider.visualizedGraphIndex = graphIndex;
+    });
+
+
     return Container(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Column(
-            children: [ElevatedButton(onPressed: (){
-              screenshotController.capture().then((Uint8List image) async {
-                //Capture Done
-                setState(() {
-                  _imageFile = image;
-                  print("hi");
-                });
-
-
-                Directory directory = await getTemporaryDirectory();
-                String fileName = "Hi.png";
-                var p = directory.path;
-                var path = '$p';
-                print(path);
-                screenshotController.captureAndSave(path, fileName:fileName);
-
-              }).catchError((onError) {
-                print(onError);
-              });
-
-
-            }, child: Text("Capture The Graph")),
-              Screenshot(
-                controller: screenshotController,
+      child: Column(
+        children: [
+          Expanded(flex:1, child: Center(child: Text("Parsing Tree", style: text_style_phase_title))),
+            Expanded(
+              flex: 10,
+              child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: SizedBox(
                   height: 500000000,
                   width: 500000000,
@@ -137,10 +126,10 @@ class _StatementPageState extends State<StatementPage> with TickerProviderStateM
                     child: SingleGraph(graphIndex, widget.statementIndex, _animationController, animationDuration),
                     ),
                   ),
-              ),
-            ],
+                ),
           ),
-          ),
+            ),
+        ],
       ),
     );
   }

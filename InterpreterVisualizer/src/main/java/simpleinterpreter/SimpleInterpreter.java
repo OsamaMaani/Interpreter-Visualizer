@@ -32,6 +32,14 @@ public class SimpleInterpreter {
         if (hadError) return;
         interpreter = new Interpreter(this);
         interpreter.interpret(statements);
+
+        //Testing
+//        System.out.println(parser.getStatmentsGraph().get(0).getAstGraph().getAstJSON().toString());
+//        System.out.println(parser.getStatmentsGraph().get(0).getAstGraph().getNodesData().toString());
+//        System.out.println(parser.getStatmentsGraph().get(0).getAstGraph().getVisitedNode().toString());
+
+
+        System.out.println(parser.getStatmentsGraph().get(0).getAstGraphIndexSync().toString());
     }
 
     JSONObject getLexicalAnalysis(){
@@ -64,6 +72,14 @@ public class SimpleInterpreter {
             statement.put("Nodes", s.getNodesData());
             statement.put("Consumed Tokens", s.getConsumedTokens());
             statement.put("Errors", s.getErrors());
+            statement.put("AST Graph Index Sync", s.getAstGraphIndexSync());
+
+            JSONObject ast = new JSONObject();
+            ast.put("Graphs", s.getAstGraph().getAstJSON());
+            ast.put("Visited Nodes", s.getAstGraph().getVisitedNode());
+            ast.put("Nodes", s.getAstGraph().getNodesData());
+            statement.put("AST", ast);
+
             syntacticAnalysis.append("Statements", statement);
         }
 

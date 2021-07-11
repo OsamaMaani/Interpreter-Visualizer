@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
+import 'package:flutterdesktopapp/utils/graphs_provider.dart';
 import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:graphite/core/matrix.dart';
 import 'package:graphite/graphite.dart';
@@ -101,7 +102,10 @@ class _SingleGraphState extends State<SingleGraph> {
 
     final utilsProvider = Provider.of<UtilitiesProvider>(context, listen: false);
 
+
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+
       // scrollToBottom();
 
       var currentErrors = currentStatement.errors[widget.index];
@@ -133,42 +137,40 @@ class _SingleGraphState extends State<SingleGraph> {
 
     return Opacity(
       opacity: animation.value,
-      child: AbsorbPointer(absorbing: false,
-        child: DirectGraph(
-          list: graph,
-          cellWidth: 180.0,
-          cellPadding: 14.0,
-          contactEdgesDistance: 5.0,
-          orientation: MatrixOrientation.Vertical,
-          // pathBuilder: customEdgePathBuilder,
-          builder: (ctx, node) {
-            return Container(
-              color: (currentStatement.visitedNode[widget.index] == int.parse(node.id) ? Colors.red : Colors.blue),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ListView.builder(
-                  // controller: scrollController,
-                  itemCount: currentStatement.nodesData[widget.index][node.id].length,
-                  itemBuilder: (context, index){
-                    if(index == 0){
-                      return Center(child: Text(currentStatement.nodesData[widget.index][node.id][index], style: text_style_graph_title));
-                    }
-                    return Text("- " + currentStatement.nodesData[widget.index][node.id][index], style: text_style_graph_text);
-                  },
-                ),
+      child: DirectGraph(
+        list: graph,
+        cellWidth: 180.0,
+        cellPadding: 14.0,
+        contactEdgesDistance: 5.0,
+        orientation: MatrixOrientation.Vertical,
+        // pathBuilder: customEdgePathBuilder,
+        builder: (ctx, node) {
+          return Container(
+            color: (currentStatement.visitedNode[widget.index] == int.parse(node.id) ? Colors.red : Colors.blue),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListView.builder(
+                // controller: scrollController,
+                itemCount: currentStatement.nodesData[widget.index][node.id].length,
+                itemBuilder: (context, index){
+                  if(index == 0){
+                    return Center(child: Text(currentStatement.nodesData[widget.index][node.id][index], style: text_style_graph_title));
+                  }
+                  return Text("- " + currentStatement.nodesData[widget.index][node.id][index], style: text_style_graph_text);
+                },
               ),
-            );
-          },
-          paintBuilder: (edge) {
-            var p = Paint()
-              ..color = Colors.blueGrey
-              ..style = PaintingStyle.stroke
-              ..strokeCap = StrokeCap.round
-              ..strokeJoin = StrokeJoin.round
-              ..strokeWidth = 2;
-            return p;
-          },
-        ),
+            ),
+          );
+        },
+        paintBuilder: (edge) {
+          var p = Paint()
+            ..color = Colors.blueGrey
+            ..style = PaintingStyle.stroke
+            ..strokeCap = StrokeCap.round
+            ..strokeJoin = StrokeJoin.round
+            ..strokeWidth = 2;
+          return p;
+        },
       ),
     );
   }

@@ -30,14 +30,13 @@ public class WebController {
 
     @RequestMapping("/interpreter/syntactic")
     public String syntacticAnalysis(@RequestParam(value = "token") String token) {
+        System.out.println("Syntactic Analysis Requested!");
         return interpreterAdapter.getSyntacticAnalysis(token).toString();
     }
 
-    @RequestMapping("/interpreter/se" +
-            "" +
-            "" +
-            "mantic")
+    @RequestMapping("/interpreter/semantic")
     public String semanticAnalysis(@RequestParam(value = "token") String token) {
+        System.out.println("Semantic Analysis Requested!");
         return interpreterAdapter.getSemanticAnalysis(token).toString();
     }
 
