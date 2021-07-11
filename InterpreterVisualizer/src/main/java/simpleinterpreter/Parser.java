@@ -19,11 +19,11 @@ class Parser {
     private int nodeIndex;
     private int statementIndex = -1;
 
-    private final List<StatementGraph> statmentsGraph;
+    private final List<ParserStatementGraph> statmentsGraph;
 
     void addNewStatement(){
         statementIndex++;
-        statmentsGraph.add(new StatementGraph());
+        statmentsGraph.add(new ParserStatementGraph());
         nodeIndex = -1;
     }
 
@@ -32,7 +32,7 @@ class Parser {
         currentStatement().addNewNode(nodeIndex, data);
     }
 
-    StatementGraph currentStatement(){
+    ParserStatementGraph currentStatement(){
         return statmentsGraph.get(statementIndex);
     }
 
@@ -44,7 +44,7 @@ class Parser {
         currentStatement().consumeToken(tokenIndex);
     }
 
-    public List<StatementGraph> getStatmentsGraph() {
+    public List<ParserStatementGraph> getStatmentsGraph() {
         return statmentsGraph;
     }
 

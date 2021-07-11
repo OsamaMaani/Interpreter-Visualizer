@@ -29,7 +29,7 @@ class _TextHighlighterState extends State<TextHighlighter> {
                   .map((e){
                     return TextSpan(
                   text: e[0],
-                  style: TextStyle( color: e[1],fontSize: 30, fontWeight: FontWeight.bold)
+                  style: TextStyle(backgroundColor: e[1],fontSize: 30, fontWeight: FontWeight.bold)
               );})
                   .toList())
 

@@ -3,10 +3,6 @@ package simpleinterpreter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class SimpleInterpreter {
@@ -60,8 +56,8 @@ public class SimpleInterpreter {
         run();
         JSONObject syntacticAnalysis = new JSONObject();
 
-        List<StatementGraph> graph = parser.getStatmentsGraph();
-        for (StatementGraph s : graph) {
+        List<ParserStatementGraph> graph = parser.getStatmentsGraph();
+        for (ParserStatementGraph s : graph) {
             JSONObject statement = new JSONObject();
             statement.put("Graphs", s.getStatmentJSON());
             statement.put("Visited Nodes", s.getVisitedNode());

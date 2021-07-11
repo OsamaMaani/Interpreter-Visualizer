@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StatementGraph {
+public class ParserStatementGraph {
 
     //same size
     private final List<JSONArray> statmentJSON;
@@ -27,7 +27,7 @@ public class StatementGraph {
     //helper map
     private final Map<Integer, Integer> nodeInIndex;
 
-    StatementGraph() {
+    ParserStatementGraph() {
         statmentJSON = new ArrayList<>();
         nodeInIndex = new HashMap<>();
         consumedTokens = new HashMap<>();
