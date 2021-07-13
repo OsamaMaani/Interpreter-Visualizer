@@ -13,7 +13,7 @@ public class SimpleInterpreter {
     private boolean run = false;
     private boolean hadError = false;
     private boolean hadRuntimeError = false;
-    private String source;
+    private final String source;
 
     public SimpleInterpreter(String source) {
         this.source = source;
@@ -21,7 +21,7 @@ public class SimpleInterpreter {
     }
 
     public void run() {
-        if(run) return;
+        if (run) return;
         run = true;
         scanner = new Scanner(source, this);
         scanner.scanTokens();
@@ -30,19 +30,22 @@ public class SimpleInterpreter {
         parser.parse();
         List<Stmt> statements = parser.getStatements();
         if (hadError) return;
-        interpreter = new Interpreter(this);
+        interpreter = new Interpreter(this, parser.getStatmentsGraph());
         interpreter.interpret(statements);
 
         //Testing
 //        System.out.println(parser.getStatmentsGraph().get(0).getAstGraph().getAstJSON().toString());
 //        System.out.println(parser.getStatmentsGraph().get(0).getAstGraph().getNodesData().toString());
 //        System.out.println(parser.getStatmentsGraph().get(0).getAstGraph().getVisitedNode().toString());
+//        System.out.println(parser.getStatmentsGraph().get(0).getAstGraphIndexSync().toString());
 
-
-        System.out.println(parser.getStatmentsGraph().get(0).getAstGraphIndexSync().toString());
+//        System.out.println(interpreter.statmentsGraph.get(0).getAstGraph().;
+//        System.out.println(interpreter.statmentsGraph.get(1).getAstGraph().getSymbolTableJSON().get(0).toString());
+//        System.out.println(interpreter.statmentsGraph.get(2).getAstGraph().getSymbolTableJSON().get(0).toString());
+//        System.out.println(interpreter.statmentsGraph.get(3).getAstGraph().getSymbolTableJSON().get(0).toString());
     }
 
-    JSONObject getLexicalAnalysis(){
+    JSONObject getLexicalAnalysis() {
         run();
         JSONObject lexicalAnalysis = new JSONObject();
 
@@ -60,12 +63,12 @@ public class SimpleInterpreter {
         return lexicalAnalysis;
     }
 
-    JSONObject getSyntacticAnalysis(){
+    JSONObject getSyntacticAnalysis() {
         run();
         JSONObject syntacticAnalysis = new JSONObject();
 
-        List<ParserStatementGraph> graph = parser.getStatmentsGraph();
-        for (ParserStatementGraph s : graph) {
+        List<StatementGraph> graph = parser.getStatmentsGraph();
+        for (StatementGraph s : graph) {
             JSONObject statement = new JSONObject();
             statement.put("Graphs", s.getStatmentJSON());
             statement.put("Visited Nodes", s.getVisitedNode());
@@ -86,11 +89,25 @@ public class SimpleInterpreter {
         return syntacticAnalysis;
     }
 
-    JSONObject getSemanticAnalysis(){
+    JSONObject getSemanticAnalysis() {
         run();
         JSONObject semanticAnalysis = new JSONObject();
 
-        if(hadError)    return semanticAnalysis;
+        if (hadError) return semanticAnalysis;
+
+        List<StatementGraph> graph = interpreter.getStatmentsGraph();
+        for (StatementGraph s : graph) {
+            JSONObject statement = new JSONObject();
+            statement.put("AST", s.getAstGraph().getInterpreterCompleteAST());
+            statement.put("Visited Nodes", s.getAstGraph().getInterpreterVisitedNode());
+            statement.put("Nodes", s.getAstGraph().getInterpreterNodesData());
+            statement.put("Symbol Table Index Sync", s.getAstGraph().getSymbolTableIndexSync());
+            statement.put("Symbol Table", s.getAstGraph().getSymbolTableJSON());
+            statement.put("Errors", s.getAstGraph().getInterpreterRuntimeErrors());
+            statement.put("Output Messages", s.getAstGraph().getInterpreterOutputMessages());
+
+            semanticAnalysis.append("Statements", statement);
+        }
 
         return semanticAnalysis;
     }

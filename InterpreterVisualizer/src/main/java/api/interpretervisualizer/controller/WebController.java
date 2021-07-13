@@ -1,7 +1,6 @@
 package api.interpretervisualizer.controller;
 
 import org.springframework.web.bind.annotation.*;
-
 import simpleinterpreter.InterpreterAdapter;
 
 import java.security.SecureRandom;

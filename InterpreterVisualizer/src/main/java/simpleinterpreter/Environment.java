@@ -43,4 +43,8 @@ class Environment {
 
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
     }
+
+    public Map<String, Object> getValues() {
+        return values;
+    }
 }

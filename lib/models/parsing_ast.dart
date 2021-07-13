@@ -1,21 +1,18 @@
-class Ast{
+class ParsingAst {
   List _nodesData;
   List _graphs;
   List _visitedNode;
 
-  Ast(this._nodesData, this._graphs, this._visitedNode);
+  ParsingAst(this._nodesData, this._graphs, this._visitedNode);
 
-  factory Ast.fromJson(Map<String, dynamic> json) {
-    List nodesDataJSON = (json["Nodes"] as List<dynamic>);
-    List nodesData = [];
-
-    nodesData = nodesDataJSON;
+  factory ParsingAst.fromJson(Map<String, dynamic> json) {
+    List nodesData = (json["Nodes"] as List<dynamic>);
 
     List graphs = (json["Graphs"] as List<dynamic>);
 
     List visitedNodes = (json["Visited Nodes"] as List<dynamic>);
 
-    return Ast(nodesData, graphs, visitedNodes);
+    return ParsingAst(nodesData, graphs, visitedNodes);
   }
 
   set nodesData(List value) {

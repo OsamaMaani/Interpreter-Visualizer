@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/services/networking.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
@@ -8,8 +7,6 @@ import 'package:flutterdesktopapp/utils/utilities_provider.dart';
 import 'package:provider/provider.dart';
 
 class ControlButtons extends StatefulWidget {
-  // const ControlButtons({Key? key}) : super(key: key);
-
   @override
   _ControlButtonsState createState() => _ControlButtonsState();
 }
@@ -20,7 +17,8 @@ class _ControlButtonsState extends State<ControlButtons> {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
-    final utilsProvider = Provider.of<UtilitiesProvider>(context, listen: false);
+    final utilsProvider =
+        Provider.of<UtilitiesProvider>(context, listen: false);
 
     String getText() {
       if (appData.isVisualized &&
@@ -34,7 +32,8 @@ class _ControlButtonsState extends State<ControlButtons> {
     }
 
     Function getPrevButtonFunc() {
-      if (appData.circleTwoClicked && appData.visualizedStatementIndex > 0) {
+      var twoORthree = appData.circleTwoClicked | appData.circleThreeClicked;
+      if (twoORthree && appData.visualizedStatementIndex > 0) {
         return () {
           appData.visualizedStatementIndex--;
         };
@@ -43,15 +42,16 @@ class _ControlButtonsState extends State<ControlButtons> {
     }
 
     Function getNextButtonFunc() {
-      if (appData.circleTwoClicked && appData.visualizedStatementIndex + 1 < appData.parsedStatementsList.length) {
+      var twoORthree = appData.circleTwoClicked | appData.circleThreeClicked;
+      if (twoORthree &&
+          appData.visualizedStatementIndex + 1 <
+              appData.parsedStatementsList.length) {
         return () {
           appData.visualizedStatementIndex++;
         };
       }
       return null;
     }
-
-
 
     void showAlertDialog(BuildContext context) {
       Widget okButton = ElevatedButton(
@@ -131,6 +131,7 @@ class _ControlButtonsState extends State<ControlButtons> {
           .sendCodeToInterpreter(appData.editingController.text.toString())
           .then((resultMessages) {
         consoleMessages = resultMessages;
+
         networkHelper.getLexicalAnalysis().then((value) {
           appData.tokensList = value;
           if (value != null) {
@@ -147,8 +148,19 @@ class _ControlButtonsState extends State<ControlButtons> {
             } else
               consoleMessages.add(["Failed to receive syntactic analysis.", 0]);
 
-            compile(consoleMessages);
-            // progress.dismiss();
+            networkHelper.getSemanticAnalysis().then((value) {
+              appData.astsList = value;
+              if (value != null) {
+                consoleMessages.add([
+                  "Requesting Semantic Analysis Completed Successfully!",
+                  1
+                ]);
+              } else
+                consoleMessages
+                    .add(["Failed to receive semantic analysis.", 0]);
+
+              compile(consoleMessages);
+            });
           });
         });
       });
@@ -179,16 +191,17 @@ class _ControlButtonsState extends State<ControlButtons> {
     Function getVisualizeButtonFunc(var context) {
       var atLeastOneCircle = appData.atLeastOneCircle();
 
-      if(atLeastOneCircle){
-        return (){_BackButtonLogic();};
+      if (atLeastOneCircle) {
+        return () {
+          _BackButtonLogic();
+        };
       }
-      if(appData.isVisualizationReady || atLeastOneCircle)
-        return (){_VisualizeButtonLogic(context);
+      if (appData.isVisualizationReady || atLeastOneCircle)
+        return () {
+          _VisualizeButtonLogic(context);
         };
       return null;
     }
-
-
 
     return Padding(
       padding: const EdgeInsets.all(5.0),
@@ -197,7 +210,7 @@ class _ControlButtonsState extends State<ControlButtons> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left:4.0, right:4.0),
+              padding: const EdgeInsets.only(left: 4.0, right: 4.0),
               child: ElevatedButton(
                 onPressed: getVisualizeButtonFunc(context),
                 child: Text(
@@ -210,7 +223,7 @@ class _ControlButtonsState extends State<ControlButtons> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left:4.0, right:4.0),
+              padding: const EdgeInsets.only(left: 4.0, right: 4.0),
               child: ElevatedButton(
                   onPressed: getPrevButtonFunc(),
                   style: run_button_style,
@@ -222,12 +235,12 @@ class _ControlButtonsState extends State<ControlButtons> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left:4.0, right:4.0),
+              padding: const EdgeInsets.only(left: 4.0, right: 4.0),
               child: ElevatedButton(
                   onPressed: getNextButtonFunc(),
                   style: run_button_style,
-                  child: Text("Next Statement",
-                      style: text_style_header_button)),
+                  child:
+                      Text("Next Statement", style: text_style_header_button)),
             ),
           )
         ],

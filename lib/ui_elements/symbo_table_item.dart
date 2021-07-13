@@ -1,136 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutterdesktopapp/models/tokens.dart';
-import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
-import 'package:flutterdesktopapp/utils/utilities_provider.dart';
-import 'package:provider/provider.dart';
+
 import 'colored_card_box.dart';
 
 class SymbolTableItem extends StatefulWidget {
-  final int index;
-  final double duration;
-  final AnimationController animationController;
-  SymbolTableItem(this.index, this.duration, this.animationController);
+  final String scope;
+  final String variable;
+  final String value;
+
+  SymbolTableItem(this.scope, this.variable, this.value);
 
   @override
   _SymbolTableItemState createState() => _SymbolTableItemState();
 }
 
-class _SymbolTableItemState extends State<SymbolTableItem>{
-  Animation animation;
-  Animation animationColor;
-  double start;
-  double end;
-  bool showErrors = true;
-
-
-  @override
-  void initState() {
-    print(widget.index.toString() + " signing in");
-    super.initState();
-    start = (widget.duration * widget.index ).toDouble();
-    end = start + widget.duration;
-    // end = (end > 1.0 ? 1.0 : end);
-    print("START $start , end $end");
-
-    animation = Tween(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: widget.animationController,
-        curve: Interval(
-          start,
-          end,
-          curve: Curves.easeInOutCirc,
-        ),
-      ),
-    );
-
-
-    var appData = Provider.of<AppData>(context, listen: false);
-    var tokenIndex = appData.tokensIndices[widget.index];
-    var tokenGoalColor = appData.tokensColors[tokenIndex];
-
-
-    animationColor = ColorTween(
-      begin: Colors.black,
-      end: tokenGoalColor,
-    ).animate(
-      CurvedAnimation(
-        parent: widget.animationController,
-        curve: Interval(
-          start,
-          end,
-          curve: Curves.easeInOutCirc,
-        ),
-      ),
-    );
-
-    widget.animationController.addListener((){
-      if(this.mounted)
-        setState(() {
-        });
-    });
-  }
-
+class _SymbolTableItemState extends State<SymbolTableItem> {
   // @override
   void dispose() {
-    print("Token Disposed");
+    print("Symbol Table Item Disposed");
     //   // TODO: implement dispose
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // print(widget.index.toString() + " " + animation.value.toString());
-
-    var appData = Provider.of<AppData>(context);
-    final utilsProvider = Provider.of<UtilitiesProvider>(context);
-
-    var tokensList = appData.tokensList;
-    var tokenIndex = appData.tokensIndices[widget.index];
-    var token = tokensList[widget.index];
-    var tokenGoalColor = appData.tokensColors[tokenIndex];
-
-
-
-
-    if(tokenIndex < utilsProvider.richTextList.length) {
-      utilsProvider.richTextList[tokenIndex][1] = animationColor.value;
-    }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (showErrors && animation.value >= start) {
-        for(var error in token.errors) {
-          utilsProvider.addConsoleMessage(error, 0);
-        }
-        showErrors = false;
-      }
-
-      var temp = List.from(utilsProvider.richTextList);
-      utilsProvider.richTextList = temp;
-    });
-
-    return Opacity(
-      opacity: animation.value,
-      child: ColoredCardBox(
-        color: animationColor.value,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-              child: Container(
-                  child: Text("${tokensList[widget.index].tokenType}", style: text_style_table_row)),
-              width: 125.0,
-            ),
-            SizedBox(
-              child: Container(
-                  child: Text("${tokensList[widget.index].lexeme}", style: text_style_table_row)),
-              width: 80.0,
-            ),
-          ],
-        ),
+    return ColoredCardBox(
+      color: Colors.lightGreenAccent[200],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          SizedBox(
+            child: Container(
+                child: Text("${widget.variable}", style: text_style_table_row)),
+            width: 125.0,
+          ),
+          SizedBox(
+            child: Container(
+                child: Text("${widget.value}", style: text_style_table_row)),
+            width: 80.0,
+          ),
+          SizedBox(
+            child: Container(
+                child: Text("${widget.scope}", style: text_style_table_row)),
+            width: 80.0,
+          ),
+        ],
       ),
     );
   }

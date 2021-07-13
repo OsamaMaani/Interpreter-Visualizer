@@ -1,9 +1,9 @@
 package simpleinterpreter;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+
 import static simpleinterpreter.TokenType.*;
 
 class Token {
@@ -23,25 +23,22 @@ class Token {
         this.end = end;
     }
 
-    int getTokenCategory(){
-        TokenType single_char[] = {LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR};
+    int getTokenCategory() {
+        TokenType[] single_char = {LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR};
 
-        TokenType two_chars[] = {BANG, BANG_EQUAL,EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL};
+        TokenType[] two_chars = {BANG, BANG_EQUAL, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL};
 
-        TokenType literals[] = {IDENTIFIER, STRING, NUMBER};
+        TokenType[] literals = {IDENTIFIER, STRING, NUMBER};
 
-        TokenType keywords[] = {AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR, PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE};
+        TokenType[] keywords = {AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR, PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE};
 
-        if(Arrays.asList(single_char).contains(type)){
+        if (Arrays.asList(single_char).contains(type)) {
             return 1;
-        }
-        else if(Arrays.asList(two_chars).contains(type)){
+        } else if (Arrays.asList(two_chars).contains(type)) {
             return 2;
-        }
-        else if(Arrays.asList(literals).contains(type)){
+        } else if (Arrays.asList(literals).contains(type)) {
             return 3;
-        }
-        else if(Arrays.asList(keywords).contains(type)){
+        } else if (Arrays.asList(keywords).contains(type)) {
             return 4;
         }
         return 0;
@@ -51,7 +48,7 @@ class Token {
         return type + "," + lexeme + "," + literal + "," + line + "," + start + "," + end + "," + getTokenCategory();
     }
 
-    JSONObject getTokenJSON(){
+    JSONObject getTokenJSON() {
         JSONObject tokenJSON = new JSONObject();
         tokenJSON.put("type", type);
         tokenJSON.put("lexeme", lexeme);

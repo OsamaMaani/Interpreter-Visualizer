@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutterdesktopapp/models/Ast.dart';
 import 'package:flutterdesktopapp/models/statement.dart';
 import 'package:flutterdesktopapp/models/tokens.dart';
 
@@ -28,35 +29,19 @@ class AppData with ChangeNotifier {
   List<Token> _tokensList = [];
 
   List<Statement> _parsedStatementsList = [];
+  List<Ast> _astsList = [];
+
+  List<Ast> get astsList => _astsList;
+
+  set astsList(List<Ast> value) {
+    _astsList = value;
+  }
 
   List<Statement> get parsedStatementsList => _parsedStatementsList;
 
   set parsedStatementsList(List<Statement> value) {
     _parsedStatementsList = value;
   }
-
-  List<String> _jsonList = [];
-  List<String> _newNodeID = [];
-  List<String> _nodeDataList = [];
-
-  List<String> get jsonList => _jsonList;
-
-  set jsonList(List<String> value) {
-    _jsonList = value;
-  }
-
-  void refreshTokensChange() {
-    _tokensChange = !_tokensChange;
-    notifyListeners();
-  }
-
-  bool get tokensChange => _tokensChange;
-
-  set tokensList(List<Token> value) {
-    _tokensList = value;
-  }
-
-  List<Token> get tokensList => _tokensList;
 
   int _visualizedStatementIndex = 0;
 
@@ -71,6 +56,29 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
+  // List<String> _jsonList = [];
+  // List<String> _newNodeID = [];
+  // List<String> _nodeDataList = [];
+
+  // List<String> get jsonList => _jsonList;
+
+  // set jsonList(List<String> value) {
+  //   _jsonList = value;
+  // }
+
+  void refreshTokensChange() {
+    _tokensChange = !_tokensChange;
+    notifyListeners();
+  }
+
+  bool get tokensChange => _tokensChange;
+
+  set tokensList(List<Token> value) {
+    _tokensList = value;
+  }
+
+  List<Token> get tokensList => _tokensList;
+
   List get tokensIndices => _tokensIndices;
 
   set tokensIndices(List value) {
@@ -83,7 +91,6 @@ class AppData with ChangeNotifier {
     _tokensColors = value;
     notifyListeners();
   }
-
 
   TextEditingController _editingController = TextEditingController();
 
@@ -140,15 +147,15 @@ class AppData with ChangeNotifier {
 
   TextEditingController get editingController => _editingController;
 
-  List<String> get newNodeID => _newNodeID;
+// List<String> get newNodeID => _newNodeID;
 
-  set newNodeID(List<String> value) {
-    _newNodeID = value;
-  }
+// set newNodeID(List<String> value) {
+//   _newNodeID = value;
+// }
 
-  List<String> get nodeDataList => _nodeDataList;
+// List<String> get nodeDataList => _nodeDataList;
 
-  set nodeDataList(List<String> value) {
-    _nodeDataList = value;
-  }
+// set nodeDataList(List<String> value) {
+//   _nodeDataList = value;
+// }
 }

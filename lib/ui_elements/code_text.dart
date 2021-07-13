@@ -19,8 +19,7 @@ class _CodeTextState extends State<CodeText> {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context, listen: true);
-    final initial_code = "var x = 3;\nvar y = 10;\nprint 5 + 3;";
-    // appData.editingController.text = initial_code;
+
     var atLeastOneCircle = appData.atLeastOneCircle();
 
     return SingleChildScrollView(
@@ -30,7 +29,7 @@ class _CodeTextState extends State<CodeText> {
         child: (atLeastOneCircle)
             ? TextHighlighter()
             : TextField(
-                onChanged: (text){
+                onChanged: (text) {
                   appData.isVisualizationReady = true;
                 },
                 controller: appData.editingController,
@@ -47,20 +46,3 @@ class _CodeTextState extends State<CodeText> {
     );
   }
 }
-
-
-
-
-/*
-(appDate.isVisualized && appDate.circleOneClicked) ?
-        RichText(
-          text: TextSpan(
-            text: 'Hello ',
-            style: DefaultTextStyle.of(context).style,
-            children: const <TextSpan>[
-              TextSpan(text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: ' world!'),
-            ],
-          ),
-        ):
- */

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterdesktopapp/components/resusable_circle.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +10,7 @@ class PageOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appData = Provider.of<AppData>(context);
+    bool syntaxError = appData.astsList.length == 0;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +24,7 @@ class PageOne extends StatelessWidget {
           function2: appData.changeCircleTwoState,
           headline3: "3",
           title3: "Semantic Analysis & Execution",
-          function3: appData.changeCircleThreeState,
+          function3: (syntaxError ? null : appData.changeCircleThreeState),
         ),
       ],
     );

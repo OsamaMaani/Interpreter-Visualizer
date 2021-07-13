@@ -6,23 +6,22 @@ import 'package:graphite/core/matrix.dart';
 import 'package:graphite/graphite.dart';
 import 'package:provider/provider.dart';
 
-class ASTPage extends StatefulWidget {
-  // const ASTPage({Key? key}) : super(key: key);
-
-  // int visualizedGraphIndex;
-  //
-  // ASTPage(this.visualizedGraphIndex);
-
+class ParsingASTPage extends StatefulWidget {
   @override
-  _ASTPageState createState() => _ASTPageState();
+  _ParsingASTPageState createState() => _ParsingASTPageState();
 }
 
-class _ASTPageState extends State<ASTPage> {
+class _ParsingASTPageState extends State<ParsingASTPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        children: [Expanded(flex:1, child: Center(child: Text("Abstract Syntax Tree", style: text_style_phase_title))),
+        children: [
+          Expanded(
+              flex: 1,
+              child: Center(
+                  child: Text("Abstract Syntax Tree",
+                      style: text_style_phase_title))),
           Expanded(
             flex: 10,
             child: SingleChildScrollView(
@@ -33,7 +32,7 @@ class _ASTPageState extends State<ASTPage> {
                   width: 500000000,
                   height: 500000000,
                   child: Container(
-                    child: ASTGraph(),
+                    child: ParsingASTGraph(),
                   ),
                 ),
               ),
@@ -45,13 +44,12 @@ class _ASTPageState extends State<ASTPage> {
   }
 }
 
-
-class ASTGraph extends StatefulWidget {
+class ParsingASTGraph extends StatefulWidget {
   @override
-  _ASTGraphState createState() => _ASTGraphState();
+  _ParsingASTGraphState createState() => _ParsingASTGraphState();
 }
 
-class _ASTGraphState extends State<ASTGraph> {
+class _ParsingASTGraphState extends State<ParsingASTGraph> {
   @override
   Widget build(BuildContext context) {
     var appData = Provider.of<AppData>(context, listen: false);
@@ -63,12 +61,11 @@ class _ASTGraphState extends State<ASTGraph> {
     var currentStatement = appData.parsedStatementsList[statementIndex];
     var astGraphIndex = currentStatement.astGraphIndexSync[graphIndex];
 
-    if(astGraphIndex == -1) return Container();
+    if (astGraphIndex == -1) return Container();
 
     var astGraph = currentStatement.astGraph;
 
     var graph = nodeInputFromJson(astGraph.graphs[astGraphIndex].toString());
-
 
     return DirectGraph(
       list: graph,
@@ -79,17 +76,24 @@ class _ASTGraphState extends State<ASTGraph> {
       // pathBuilder: customEdgePathBuilder,
       builder: (ctx, node) {
         return Container(
-          color: (astGraph.visitedNode[astGraphIndex] == int.parse(node.id) ? Colors.red : Colors.blue),
+          color: (astGraph.visitedNode[astGraphIndex] == int.parse(node.id)
+              ? Colors.red
+              : Colors.blue),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: ListView.builder(
               // controller: scrollController,
               itemCount: astGraph.nodesData[astGraphIndex][node.id].length,
-              itemBuilder: (context, index){
-                if(index == 0){
-                  return Center(child: Text(astGraph.nodesData[astGraphIndex][node.id][index], style: text_style_graph_title));
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Center(
+                      child: Text(
+                          astGraph.nodesData[astGraphIndex][node.id][index],
+                          style: text_style_graph_title));
                 }
-                return Text("- " + astGraph.nodesData[astGraphIndex][node.id][index], style: text_style_graph_text);
+                return Text(
+                    "- " + astGraph.nodesData[astGraphIndex][node.id][index],
+                    style: text_style_graph_text);
               },
             ),
           ),

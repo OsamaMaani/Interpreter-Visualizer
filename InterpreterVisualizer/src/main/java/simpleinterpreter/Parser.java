@@ -1,6 +1,5 @@
 package simpleinterpreter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,50 +16,56 @@ class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
+
+    /********************** Visualization ***************/
+    private final List<StatementGraph> statmentsGraph;
+
     private int nodeIndex;
     private int astNodeIndex;
     private int statementIndex = -1;
 
-    private final List<ParserStatementGraph> statmentsGraph;
-
-    void addNewStatement(){
+    void addNewStatement() {
         statementIndex++;
-        statmentsGraph.add(new ParserStatementGraph());
+        statmentsGraph.add(new StatementGraph());
         nodeIndex = -1;
         astNodeIndex = -1;
     }
 
-    void addNewNode(String data){
+    void addNewNode(String data) {
         nodeIndex++;
         currentStatement().addNewNode(nodeIndex, data);
     }
 
-    void addNewASTNode(int nodeIndex, List<String> data, List<Integer> neighbours){
+    void addNewASTNode(int nodeIndex, List<String> data, List<Integer> neighbours) {
         astNodeIndex++;
         currentStatement().addASTNode(nodeIndex, astNodeIndex, data, neighbours);
     }
 
-    ParserStatementGraph currentStatement(){
+    StatementGraph currentStatement() {
         return statmentsGraph.get(statementIndex);
     }
 
-    void visitNode(int nodeIndex, String data){
+    void visitNode(int nodeIndex, String data) {
         currentStatement().visitNode(nodeIndex, data);
     }
 
-    void consumeToken(int tokenIndex){
+    void consumeToken(int tokenIndex) {
         currentStatement().consumeToken(tokenIndex);
     }
 
-    public List<ParserStatementGraph> getStatmentsGraph() {
+    public List<StatementGraph> getStatmentsGraph() {
         return statmentsGraph;
     }
 
-    void reportError(String message){
-        currentStatement().reportError(message);
+    void reportError(String message) {
+        currentStatement().reportSyntaxError(message);
     }
 
+    /***************************************************************/
+
+
     SimpleInterpreter simpleInterpreter;
+
     Parser(List<Token> tokens, SimpleInterpreter simpleInterpreter) {
         this.tokens = tokens;
         this.simpleInterpreter = simpleInterpreter;
@@ -89,7 +94,7 @@ class Parser {
         try {
             Stmt ret;
             visitNode(nodeIdx, "Looking for \"var\" keyword");
-            if (match(VAR)){
+            if (match(VAR)) {
                 visitNode(nodeIdx, "\"var\" keyword is parsed, moving to varDecl rule");
                 ret = varDeclaration();
                 visitNode(nodeIdx, "");
@@ -119,17 +124,16 @@ class Parser {
             visitNode(nodeIdx, "EQUAL operator is parsed, moving to expression rule");
             initializer = expression();
             visitNode(nodeIdx, "Expression is parsed, looking for semi-colon after variable declaration");
-        }
-        else{
+        } else {
             visitNode(nodeIdx, "EQUAL operator was not found, looking for semi-colon after variable declaration");
         }
 
         consume(SEMICOLON, "Expect ';' after variable declaration.");
 
-        if(initializer == null)
-            addNewASTNode(nodeIdx, prepareListOfData("Variable Declaration Statement", "Variable Name: " + name.lexeme), prepareListOfNeighbours());
+        if (initializer == null)
+            addNewASTNode(nodeIdx, prepareList("Variable Declaration Statement", "Variable Name: " + name.lexeme), prepareList());
         else
-            addNewASTNode(nodeIdx, prepareListOfData("Variable Declaration Statement", "Variable Name: " + name.lexeme), prepareListOfNeighbours(initializer.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Variable Declaration Statement", "Variable Name: " + name.lexeme), prepareList(initializer.astNodeIndex));
         return new Stmt.Var(name, initializer, astNodeIndex);
     }
 
@@ -137,17 +141,17 @@ class Parser {
         addNewNode("While Statement Rule");
         int nodeIdx = nodeIndex;
 
-        visitNode(nodeIdx, "Looking for \'(\'");
+        visitNode(nodeIdx, "Looking for '('");
         consume(LEFT_PAREN, "Expect '(' after 'while'.");
-        visitNode(nodeIdx, "\'(\' is parsed, moving to the while condition with the expression rule");
+        visitNode(nodeIdx, "'(' is parsed, moving to the while condition with the expression rule");
         Expr condition = expression();
-        visitNode(nodeIdx, "while condition is parsed, looking for \')\'");
+        visitNode(nodeIdx, "while condition is parsed, looking for ')'");
         consume(RIGHT_PAREN, "Expect ')' after condition.");
-        visitNode(nodeIdx, "\')\' is parsed, moving to the while body with the statement rule");
+        visitNode(nodeIdx, "')' is parsed, moving to the while body with the statement rule");
         Stmt body = statement();
         visitNode(nodeIdx, "while body is parsed");
 
-        addNewASTNode(nodeIdx, prepareListOfData("While Statement"), prepareListOfNeighbours(condition.astNodeIndex, body.astNodeIndex));
+        addNewASTNode(nodeIdx, prepareList("While Statement"), prepareList(condition.astNodeIndex, body.astNodeIndex));
         return new Stmt.While(condition, body, astNodeIndex);
     }
 
@@ -158,38 +162,38 @@ class Parser {
         visitNode(nodeIdx, "Looking for one of the following \"if\", \"print\", \"while\" keywords or '{'");
 
         Stmt ret;
-        if (match(IF)){
+        if (match(IF)) {
             visitNode(nodeIdx, "if keyword is parsed, now moving to if statement rule");
             ret = ifStatement();
             visitNode(nodeIdx, "if statement is parsed");
             return ret;
         }
 
-        if (match(PRINT)){
+        if (match(PRINT)) {
             visitNode(nodeIdx, "print keyword is parsed, now moving to print statement rule");
             ret = printStatement();
             visitNode(nodeIdx, "print statement is parsed");
             return ret;
         }
 
-        if (match(WHILE)){
+        if (match(WHILE)) {
             visitNode(nodeIdx, "while keyword is parsed, now moving to while statement rule");
             ret = whileStatement();
             visitNode(nodeIdx, "while statement is parsed");
             return ret;
         }
 
-        if (match(LEFT_BRACE)){
+        if (match(LEFT_BRACE)) {
             visitNode(nodeIdx, "'{' is parsed, now moving to the statements block rule");
 
             List<Stmt> blockOfStatements = block();
 
             List<Integer> indices = new ArrayList<>();
-            for(Stmt s : blockOfStatements) {
+            for (Stmt s : blockOfStatements) {
                 indices.add(s.astNodeIndex);
             }
 
-            addNewASTNode(nodeIdx, prepareListOfData("Block of Statements"), indices);
+            addNewASTNode(nodeIdx, prepareList("Block of Statements"), indices);
 
             ret = new Stmt.Block(blockOfStatements, astNodeIndex);
             visitNode(nodeIdx, "statements block is parsed");
@@ -220,16 +224,14 @@ class Parser {
             visitNode(nodeIdx, "\"else\" keyword is found, moving to statement rule to parse else's body");
             elseBranch = statement();
             visitNode(nodeIdx, "else's body is parsed");
-        }
-        else{
+        } else {
             visitNode(nodeIdx, "\"else\" keyword is not found");
         }
 
-        if(elseBranch == null){
-            addNewASTNode(nodeIdx, prepareListOfData("If Statement"), prepareListOfNeighbours(condition.astNodeIndex, thenBranch.astNodeIndex));
-        }
-        else{
-            addNewASTNode(nodeIdx, prepareListOfData("If Statement"), prepareListOfNeighbours(condition.astNodeIndex, thenBranch.astNodeIndex, elseBranch.astNodeIndex));
+        if (elseBranch == null) {
+            addNewASTNode(nodeIdx, prepareList("If Statement"), prepareList(condition.astNodeIndex, thenBranch.astNodeIndex));
+        } else {
+            addNewASTNode(nodeIdx, prepareList("If Statement"), prepareList(condition.astNodeIndex, thenBranch.astNodeIndex, elseBranch.astNodeIndex));
         }
 
         return new Stmt.If(condition, thenBranch, elseBranch, astNodeIndex);
@@ -244,7 +246,7 @@ class Parser {
         visitNode(nodeIdx, "expression is parsed, looking for semi-colon after the expression");
         consume(SEMICOLON, "Expect ';' after value.");
 
-        addNewASTNode(nodeIdx, prepareListOfData("Print Statement"), prepareListOfNeighbours(value.astNodeIndex));
+        addNewASTNode(nodeIdx, prepareList("Print Statement"), prepareList(value.astNodeIndex));
         return new Stmt.Print(value, astNodeIndex);
     }
 
@@ -274,7 +276,7 @@ class Parser {
 
         consume(SEMICOLON, "Expect ';' after expression.");
 
-        addNewASTNode(nodeIdx, prepareListOfData("Expression Statement"), prepareListOfNeighbours(expr.astNodeIndex));
+        addNewASTNode(nodeIdx, prepareList("Expression Statement"), prepareList(expr.astNodeIndex));
         return new Stmt.Expression(expr, astNodeIndex);
     }
 
@@ -304,8 +306,8 @@ class Parser {
             visitNode(nodeIdx, "assignment rule is parsed, checking if the left hand side is a valid variable");
 
             if (expr instanceof Expr.Variable) {
-                Token name = ((Expr.Variable)expr).name;
-                addNewASTNode(nodeIdx, prepareListOfData("Assignment Expression", "Variable Name: " + name.lexeme), prepareListOfNeighbours(value.astNodeIndex));
+                Token name = ((Expr.Variable) expr).name;
+                addNewASTNode(nodeIdx, prepareList("Assignment Expression", "Variable Name: " + name.lexeme), prepareList(value.astNodeIndex));
                 return new Expr.Assign(name, value, astNodeIndex);
             }
 
@@ -329,7 +331,7 @@ class Parser {
             Token operator = previous();
             Expr right = and();
             visitNode(nodeIdx, "logical and rule is parsed");
-            addNewASTNode(nodeIdx, prepareListOfData("Logical Expression", "Operator: " + operator.lexeme), prepareListOfNeighbours(expr.astNodeIndex, right.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Logical Expression", "Operator: " + operator.lexeme), prepareList(expr.astNodeIndex, right.astNodeIndex));
             expr = new Expr.Logical(expr, operator, right, astNodeIndex);
         }
 
@@ -349,7 +351,7 @@ class Parser {
             Token operator = previous();
             Expr right = equality();
             visitNode(nodeIdx, "equality rule is parsed");
-            addNewASTNode(nodeIdx, prepareListOfData("Logical Expression", "Operator: " + operator.lexeme), prepareListOfNeighbours(expr.astNodeIndex, right.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Logical Expression", "Operator: " + operator.lexeme), prepareList(expr.astNodeIndex, right.astNodeIndex));
             expr = new Expr.Logical(expr, operator, right, astNodeIndex);
         }
 
@@ -369,7 +371,7 @@ class Parser {
             visitNode(nodeIdx, "an operators is parsed, moving into comparison rule");
             Expr right = comparison();
             visitNode(nodeIdx, "comparison rule is parsed");
-            addNewASTNode(nodeIdx, prepareListOfData("Binary Expression", "Operator: " + operator.lexeme), prepareListOfNeighbours(expr.astNodeIndex, right.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Binary Expression", "Operator: " + operator.lexeme), prepareList(expr.astNodeIndex, right.astNodeIndex));
             expr = new Expr.Binary(expr, operator, right, astNodeIndex);
         }
 
@@ -389,7 +391,7 @@ class Parser {
             Token operator = previous();
             Expr right = term();
             visitNode(nodeIdx, "term rule is parsed");
-            addNewASTNode(nodeIdx, prepareListOfData("Binary Expression", "Operator: " + operator.lexeme), prepareListOfNeighbours(expr.astNodeIndex, right.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Binary Expression", "Operator: " + operator.lexeme), prepareList(expr.astNodeIndex, right.astNodeIndex));
             expr = new Expr.Binary(expr, operator, right, astNodeIndex);
         }
 
@@ -409,7 +411,7 @@ class Parser {
             Token operator = previous();
             Expr right = factor();
             visitNode(nodeIdx, "factor rule is parsed");
-            addNewASTNode(nodeIdx, prepareListOfData("Binary Expression", "Operator: " + operator.lexeme), prepareListOfNeighbours(expr.astNodeIndex, right.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Binary Expression", "Operator: " + operator.lexeme), prepareList(expr.astNodeIndex, right.astNodeIndex));
             expr = new Expr.Binary(expr, operator, right, astNodeIndex);
         }
 
@@ -429,7 +431,7 @@ class Parser {
             Token operator = previous();
             Expr right = unary();
             visitNode(nodeIdx, "unary rule is parsed");
-            addNewASTNode(nodeIdx, prepareListOfData("Binary Expression", "Operator: " + operator.lexeme), prepareListOfNeighbours(expr.astNodeIndex, right.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Binary Expression", "Operator: " + operator.lexeme), prepareList(expr.astNodeIndex, right.astNodeIndex));
             expr = new Expr.Binary(expr, operator, right, astNodeIndex);
         }
 
@@ -446,7 +448,7 @@ class Parser {
             Token operator = previous();
             Expr right = unary();
             visitNode(nodeIdx, "unary rule is parsed");
-            addNewASTNode(nodeIdx, prepareListOfData("Unary Expression", "Operator: " + operator.lexeme), prepareListOfNeighbours(right.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Unary Expression", "Operator: " + operator.lexeme), prepareList(right.astNodeIndex));
             return new Expr.Unary(operator, right, astNodeIndex);
         }
 
@@ -461,31 +463,31 @@ class Parser {
         int nodeIdx = nodeIndex;
 
 
-        if (match(FALSE)){
+        if (match(FALSE)) {
             visitNode(nodeIndex, "\"false\" keyword is found");
-            addNewASTNode(nodeIdx, prepareListOfData("Literal", "Value: " + "false"), prepareListOfNeighbours());
+            addNewASTNode(nodeIdx, prepareList("Literal", "Value: " + "false"), prepareList());
             return new Expr.Literal(false, astNodeIndex);
         }
-        if (match(TRUE)){
+        if (match(TRUE)) {
             visitNode(nodeIndex, "\"true\" keyword is found");
-            addNewASTNode(nodeIdx, prepareListOfData("Literal", "Value: " + "true"), prepareListOfNeighbours());
+            addNewASTNode(nodeIdx, prepareList("Literal", "Value: " + "true"), prepareList());
             return new Expr.Literal(true, astNodeIndex);
         }
-        if (match(NIL)){
+        if (match(NIL)) {
             visitNode(nodeIndex, "\"nil\" keyword is found");
-            addNewASTNode(nodeIdx, prepareListOfData("Literal", "Value: " + "nil"), prepareListOfNeighbours());
+            addNewASTNode(nodeIdx, prepareList("Literal", "Value: " + "nil"), prepareList());
             return new Expr.Literal(null, astNodeIndex);
         }
 
         if (match(NUMBER, STRING)) {
             visitNode(nodeIndex, "a number or a string is found");
-            addNewASTNode(nodeIdx, prepareListOfData("Literal", "Value: " + previous().literal), prepareListOfNeighbours());
+            addNewASTNode(nodeIdx, prepareList("Literal", "Value: " + previous().literal), prepareList());
             return new Expr.Literal(previous().literal, astNodeIndex);
         }
 
         if (match(IDENTIFIER)) {
             visitNode(nodeIndex, "an IDENTIFIER is found");
-            addNewASTNode(nodeIdx, prepareListOfData("IDENTIFIER", "Name: " + previous().lexeme), prepareListOfNeighbours());
+            addNewASTNode(nodeIdx, prepareList("IDENTIFIER", "Name: " + previous().lexeme), prepareList());
             return new Expr.Variable(previous(), astNodeIndex);
         }
 
@@ -494,13 +496,12 @@ class Parser {
             Expr expr = expression();
             visitNode(nodeIdx, "expression is parsed, looking for ')");
             consume(RIGHT_PAREN, "Expect ')' after expression.");
-            addNewASTNode(nodeIdx, prepareListOfData("Grouping of Expression"), prepareListOfNeighbours(expr.astNodeIndex));
+            addNewASTNode(nodeIdx, prepareList("Grouping of Expression"), prepareList(expr.astNodeIndex));
             return new Expr.Grouping(expr, astNodeIndex);
         }
 
         throw error(peek(), "Expect expression.");
     }
-
 
 
     private boolean match(TokenType... types) {
@@ -526,7 +527,7 @@ class Parser {
     }
 
     private Token advance() {
-        if (!isAtEnd()){
+        if (!isAtEnd()) {
             consumeToken(current);
             current++;
         }
@@ -551,14 +552,14 @@ class Parser {
         return new ParseError();
     }
 
-    private String getErrorMessage(Token token, String message){
+    private String getErrorMessage(Token token, String message) {
         int line = token.line;
         String where;
 
         if (token.type == TokenType.EOF) {
             where = " at end";
         } else {
-            where =  " at '" + token.lexeme + "'";
+            where = " at '" + token.lexeme + "'";
         }
 
         String output = "[line " + line + "] Error" + where + ": " + message;
@@ -588,20 +589,10 @@ class Parser {
         }
     }
 
-
-
-
-    List<String> prepareListOfData(String ... args){
-        List<String> data = new ArrayList<>();
-        for(String s : args)
+    <T> List<T> prepareList(T... args) {
+        List<T> data = new ArrayList<>();
+        for (T s : args)
             data.add(s);
         return data;
-    }
-
-    List<Integer> prepareListOfNeighbours(Integer ... args){
-        List<Integer> neighbours = new ArrayList<>();
-        for(Integer to : args)
-            neighbours.add(to);
-        return neighbours;
     }
 }

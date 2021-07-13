@@ -1,93 +1,84 @@
-
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutterdesktopapp/ui_elements/card_box.dart';
-import 'package:flutterdesktopapp/ui_elements/single_graph.dart';
-import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutterdesktopapp/utils/graphs_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
 
-
+import 'ast_graph.dart';
 
 class SemanticPage extends StatefulWidget {
-  final int numberOfGraphs;
+  final int numberOfSteps;
   final int visualizedStatementIndex;
 
-  SemanticPage(this.numberOfGraphs, this.visualizedStatementIndex);
+  SemanticPage(this.numberOfSteps, this.visualizedStatementIndex);
 
   final semanticStatementPageKey = GlobalKey<_SemanticStatementPageState>();
 
   @override
   _SemanticPageState createState() => _SemanticPageState();
-
 }
 
 class _SemanticPageState extends State<SemanticPage> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: SemanticStatementPage(key: widget.semanticStatementPageKey, numberOfGraphs: widget.numberOfGraphs, statementIndex: widget.visualizedStatementIndex),
+      child: SemanticStatementPage(
+          key: widget.semanticStatementPageKey,
+          numberOfSteps: widget.numberOfSteps,
+          statementIndex: widget.visualizedStatementIndex),
     );
   }
 }
 
 class SemanticStatementPage extends StatefulWidget {
-  final int numberOfGraphs;
+  final int numberOfSteps;
   final int statementIndex;
-  const SemanticStatementPage({Key key, this.numberOfGraphs, this.statementIndex}) : super(key: key);
+
+  const SemanticStatementPage(
+      {Key key, this.numberOfSteps, this.statementIndex})
+      : super(key: key);
 
   @override
   _SemanticStatementPageState createState() => _SemanticStatementPageState();
 }
 
-class _SemanticStatementPageState extends State<SemanticStatementPage> with TickerProviderStateMixin{
+class _SemanticStatementPageState extends State<SemanticStatementPage>
+    with TickerProviderStateMixin {
   AnimationController _animationController;
   double animationDuration;
-  int durationOfSingleGraph;
+  int durationOfSingleStep;
   int totalDuration;
-  int graphIndex = 0;
+  int stepIndex = 0;
   Animation animation;
-
-  ScreenshotController screenshotController = ScreenshotController();
-  int _counter = 0;
-  Uint8List _imageFile;
 
   @override
   void initState() {
     super.initState();
-    durationOfSingleGraph = 900;
-    totalDuration = widget.numberOfGraphs * durationOfSingleGraph;
+    durationOfSingleStep = 900;
+    totalDuration = widget.numberOfSteps * durationOfSingleStep;
     _animationController = AnimationController(
         vsync: this, duration: new Duration(milliseconds: totalDuration));
 
-
-    _animationController.addListener((){
-      if(this.mounted)
-        setState(() {
-        });
+    _animationController.addListener(() {
+      if (this.mounted) setState(() {});
     });
 
-
-    animationDuration = durationOfSingleGraph / totalDuration;
+    animationDuration = durationOfSingleStep / totalDuration;
     _animationController.forward();
   }
 
   @override
   void setState(VoidCallback fn) {
-    var start = (animationDuration * graphIndex).toDouble();
+    var start = (animationDuration * stepIndex).toDouble();
     var end = start + animationDuration;
 
     start *= totalDuration;
     end *= totalDuration;
 
-    if(_animationController.lastElapsedDuration != null && _animationController.lastElapsedDuration.inMilliseconds.toDouble() > end){
-      graphIndex++;
+    if (_animationController.lastElapsedDuration != null &&
+        _animationController.lastElapsedDuration.inMilliseconds.toDouble() >
+            end) {
+      stepIndex++;
     }
     // TODO: implement setState
     super.setState(fn);
@@ -95,54 +86,45 @@ class _SemanticStatementPageState extends State<SemanticStatementPage> with Tick
 
   @override
   void dispose() {
-    print("Statement Disposed");
+    print("Statement AST Disposed");
     _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final graphProvider = Provider.of<GraphProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      graphProvider.visualizedStatementIndex = widget.statementIndex;
+      graphProvider.visualizedStepIndex = stepIndex;
+    });
+
     return Container(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Column(
-            children: [ElevatedButton(onPressed: (){
-              screenshotController.capture().then((Uint8List image) async {
-                //Capture Done
-                setState(() {
-                  _imageFile = image;
-                  print("hi");
-                });
-
-
-                Directory directory = await getTemporaryDirectory();
-                String fileName = "Hi.png";
-                var p = directory.path;
-                var path = '$p';
-                print(path);
-                screenshotController.captureAndSave(path, fileName:fileName);
-
-              }).catchError((onError) {
-                print(onError);
-              });
-
-
-            }, child: Text("Capture The Graph")),
-              Screenshot(
-                controller: screenshotController,
+      child: Column(
+        children: [
+          Expanded(
+              flex: 1,
+              child: Center(
+                  child: Text("Abstract Syntax Tree",
+                      style: text_style_phase_title))),
+          Expanded(
+            flex: 10,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: SizedBox(
                   height: 500000000,
                   width: 500000000,
                   child: Container(
-                    child: SingleGraph(graphIndex, widget.statementIndex, _animationController, animationDuration),
+                    child: ASTGraph(stepIndex, widget.statementIndex,
+                        _animationController, animationDuration),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

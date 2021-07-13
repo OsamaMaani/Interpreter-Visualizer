@@ -1,50 +1,48 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/ui_elements/card_box.dart';
 import 'package:flutterdesktopapp/ui_elements/symbo_table_item.dart';
-import 'package:flutterdesktopapp/ui_elements/token_item.dart';
 import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
+import 'package:flutterdesktopapp/utils/graphs_provider.dart';
 import 'package:provider/provider.dart';
+
 class SymbolTable extends StatefulWidget {
-  final int numberOfTokens;
-
-  SymbolTable(this.numberOfTokens);
-
   @override
   _SymbolTableState createState() => _SymbolTableState();
 }
 
-class _SymbolTableState extends State<SymbolTable> with TickerProviderStateMixin{
-  AnimationController _animationController;
-  double animationDuration;
-  int durationOfSingleToken;
-  int totalDuration;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    durationOfSingleToken = 1500;
-    totalDuration = widget.numberOfTokens * durationOfSingleToken;
-    _animationController = AnimationController(
-        vsync: this, duration: new Duration(milliseconds: totalDuration));
-
-    animationDuration = durationOfSingleToken / totalDuration;
-    _animationController.forward();
-  }
-
-
+class _SymbolTableState extends State<SymbolTable>
+    with TickerProviderStateMixin {
   @override
   void dispose() {
-    print("Tokens Page Disposed");
-    _animationController.dispose();
+    print("Symbol Table Page Disposed");
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    var appData = Provider.of<AppData>(context);
+    final graphProvider = Provider.of<GraphProvider>(context);
+
+    var symbolTable =
+        appData.astsList[graphProvider.visualizedStatementIndex].symbolTable;
+    var symbolTableSyncIndex = appData
+        .astsList[graphProvider.visualizedStatementIndex]
+        .symbolTableIndexSync[graphProvider.visualizedStepIndex];
+    var currentSymbolTable = symbolTable[symbolTableSyncIndex];
+
+    List scopes = [], variables = [], values = [];
+    for (var scope in currentSymbolTable.keys) {
+      for (var variable in currentSymbolTable[scope].keys) {
+        scopes.add(scope);
+        variables.add(variable);
+        values.add(currentSymbolTable[scope][variable]);
+      }
+    }
+
+    int len = scopes.length;
+
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -63,15 +61,20 @@ class _SymbolTableState extends State<SymbolTable> with TickerProviderStateMixin
                     "Value",
                     style: text_style_table,
                   ),
+                  Text(
+                    "Scope",
+                    style: text_style_table,
+                  ),
                 ],
               ),
             ),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: widget.numberOfTokens,
+              itemCount: len,
               itemBuilder: (context, index) {
-                return SymbolTableItem(index, animationDuration, _animationController);
+                return SymbolTableItem(scopes[index].toString(),
+                    variables[index].toString(), values[index].toString());
               },
             ),
           )

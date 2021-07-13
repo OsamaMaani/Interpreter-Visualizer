@@ -5,7 +5,11 @@ class FreeScrollView extends StatefulWidget {
   final Widget child;
   final ScrollPhysics physics;
 
-  const FreeScrollView({Key key, this.physics = const ClampingScrollPhysics(), @required this.child}) : super(key: key);
+  const FreeScrollView(
+      {Key key,
+      this.physics = const ClampingScrollPhysics(),
+      @required this.child})
+      : super(key: key);
 
   @override
   State<FreeScrollView> createState() => _FreeScrollViewState();
@@ -14,44 +18,48 @@ class FreeScrollView extends StatefulWidget {
 class _FreeScrollViewState extends State<FreeScrollView> {
   final ScrollController _verticalController = ScrollController();
   final ScrollController _horizontalController = ScrollController();
-  final Map<Type, GestureRecognizerFactory> _gestureRecognizers = <Type, GestureRecognizerFactory>{};
+  final Map<Type, GestureRecognizerFactory> _gestureRecognizers =
+      <Type, GestureRecognizerFactory>{};
 
   @override
   void initState() {
     super.initState();
-    _gestureRecognizers[PanGestureRecognizer] = GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
+    _gestureRecognizers[PanGestureRecognizer] =
+        GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
             () => PanGestureRecognizer(),
             (instance) => instance
-          ..onDown = _handleDragDown
-          ..onStart = _handleDragStart
-          ..onUpdate = _handleDragUpdate
-          ..onEnd = _handleDragEnd
-          ..onCancel = _handleDragCancel
-          ..minFlingDistance = widget.physics.minFlingDistance
-          ..minFlingVelocity = widget.physics.minFlingVelocity
-          ..maxFlingVelocity = widget.physics.maxFlingVelocity
-          ..velocityTrackerBuilder = ScrollConfiguration.of(context).velocityTrackerBuilder(context)
-          ..dragStartBehavior = DragStartBehavior.start);
+              ..onDown = _handleDragDown
+              ..onStart = _handleDragStart
+              ..onUpdate = _handleDragUpdate
+              ..onEnd = _handleDragEnd
+              ..onCancel = _handleDragCancel
+              ..minFlingDistance = widget.physics.minFlingDistance
+              ..minFlingVelocity = widget.physics.minFlingVelocity
+              ..maxFlingVelocity = widget.physics.maxFlingVelocity
+              ..velocityTrackerBuilder = ScrollConfiguration.of(context)
+                  .velocityTrackerBuilder(context)
+              ..dragStartBehavior = DragStartBehavior.start);
   }
 
   @override
   Widget build(BuildContext context) => Stack(children: [
-    SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        controller: _horizontalController,
-        physics: widget.physics,
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical, // ignore: avoid_redundant_argument_values
-            controller: _verticalController,
+        SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            controller: _horizontalController,
             physics: widget.physics,
-            child: widget.child)),
-    Positioned.fill(
-        child: RawGestureDetector(
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                // ignore: avoid_redundant_argument_values
+                controller: _verticalController,
+                physics: widget.physics,
+                child: widget.child)),
+        Positioned.fill(
+            child: RawGestureDetector(
           gestures: _gestureRecognizers,
           behavior: HitTestBehavior.opaque,
           excludeFromSemantics: true,
         )),
-  ]);
+      ]);
 
   Drag _horizontalDrag;
   Drag _verticalDrag;
@@ -59,13 +67,17 @@ class _FreeScrollViewState extends State<FreeScrollView> {
   ScrollHoldController _verticalHold;
 
   void _handleDragDown(DragDownDetails details) {
-    _horizontalHold = _horizontalController.position.hold(() => _horizontalHold = null);
-    _verticalHold = _verticalController.position.hold(() => _verticalHold = null);
+    _horizontalHold =
+        _horizontalController.position.hold(() => _horizontalHold = null);
+    _verticalHold =
+        _verticalController.position.hold(() => _verticalHold = null);
   }
 
   void _handleDragStart(DragStartDetails details) {
-    _horizontalDrag = _horizontalController.position.drag(details, () => _horizontalDrag = null);
-    _verticalDrag = _verticalController.position.drag(details, () => _verticalDrag = null);
+    _horizontalDrag = _horizontalController.position
+        .drag(details, () => _horizontalDrag = null);
+    _verticalDrag =
+        _verticalController.position.drag(details, () => _verticalDrag = null);
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -82,10 +94,12 @@ class _FreeScrollViewState extends State<FreeScrollView> {
   }
 
   void _handleDragEnd(DragEndDetails details) {
-    _horizontalDrag
-        ?.end(DragEndDetails(velocity: details.velocity, primaryVelocity: details.velocity.pixelsPerSecond.dx));
-    _verticalDrag
-        ?.end(DragEndDetails(velocity: details.velocity, primaryVelocity: details.velocity.pixelsPerSecond.dy));
+    _horizontalDrag?.end(DragEndDetails(
+        velocity: details.velocity,
+        primaryVelocity: details.velocity.pixelsPerSecond.dx));
+    _verticalDrag?.end(DragEndDetails(
+        velocity: details.velocity,
+        primaryVelocity: details.velocity.pixelsPerSecond.dy));
   }
 
   void _handleDragCancel() {

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParserStatementGraph {
+public class StatementGraph {
 
     public AST getAstGraph() {
         return astGraph;
@@ -39,7 +39,7 @@ public class ParserStatementGraph {
     //helper map
     private final Map<Integer, Integer> nodeInIndex;
 
-    ParserStatementGraph() {
+    StatementGraph() {
         astGraph = new AST();
         statmentJSON = new ArrayList<>();
         nodeInIndex = new HashMap<>();
@@ -50,21 +50,21 @@ public class ParserStatementGraph {
         nodesData = new ArrayList<>();
     }
 
-    void addASTNode(int parsingNodeIndex, int astNodeindex, List<String> data, List<Integer> neighbours){
+    void addASTNode(int parsingNodeIndex, int astNodeindex, List<String> data, List<Integer> neighbours) {
         astGraph.addNewNode(astNodeindex, data, neighbours);
         visitNode(parsingNodeIndex, "");
     }
 
-    void addNodeData(int index, String data){
+    void addNodeData(int index, String data) {
         //Data
         JSONObject lastDataJSONObject = new JSONObject(getLastJSONObject().toString());
-        if(data != "") {
+        if (data != "") {
             lastDataJSONObject.append(Integer.toString(index), data);
         }
         nodesData.add(lastDataJSONObject);
     }
 
-    void addNewNode(int index, String data){
+    void addNewNode(int index, String data) {
         nodeInIndex.put(index, getLastJSONArray().length());
 
         addNodeData(index, data);
@@ -74,7 +74,7 @@ public class ParserStatementGraph {
         int lastNode = getLastVisitedNodeIndex(); //from
 
         visitedNode.put(index);
-        if(lastNode != -1) {
+        if (lastNode != -1) {
             int indexOfNodeInJSON = nodeInIndex.get(lastNode);
             lastJSONArray.getJSONObject(indexOfNodeInJSON).append(NEXT, toStringWithDoubleQuotes(index));
         }
@@ -85,10 +85,10 @@ public class ParserStatementGraph {
 
         lastJSONArray.put(currentNode);
         statmentJSON.add(lastJSONArray);
-        astGraphIndexSync.put(astGraph.getASTGraphsSize() - 1);
+        astGraphIndexSync.put(astGraph.getASTsSize() - 1);
     }
 
-    void visitNode(int index, String data){
+    void visitNode(int index, String data) {
         visitedNode.put(index);
 
         addNodeData(index, data);
@@ -96,18 +96,18 @@ public class ParserStatementGraph {
         // keep the lists consistent
         JSONArray last = getLastJSONArray();
         statmentJSON.add(last);
-        astGraphIndexSync.put(astGraph.getASTGraphsSize() - 1);
+        astGraphIndexSync.put(astGraph.getASTsSize() - 1);
     }
 
-    void consumeToken(int tokenIndex){
+    void consumeToken(int tokenIndex) {
         int index = statmentJSON.size() - 1;
-        if(consumedTokens.get(index) == null){
+        if (consumedTokens.get(index) == null) {
             consumedTokens.put(index, new ArrayList<>());
         }
         consumedTokens.get(statmentJSON.size() - 1).add(tokenIndex);
     }
 
-    void reportError(String message){
+    void reportSyntaxError(String message) {
         int index = statmentJSON.size() - 1;
         JSONObject error = new JSONObject();
         error.put(Integer.toString(index), message);
@@ -115,23 +115,23 @@ public class ParserStatementGraph {
     }
 
 
-    JSONArray getLastJSONArray(){
+    JSONArray getLastJSONArray() {
         int size = statmentJSON.size();
-        if(size == 0)
+        if (size == 0)
             return new JSONArray();
         return statmentJSON.get(size - 1);
     }
 
-    JSONObject getLastJSONObject(){
+    JSONObject getLastJSONObject() {
         int size = nodesData.size();
-        if(size == 0)
+        if (size == 0)
             return new JSONObject();
         return nodesData.get(size - 1);
     }
 
-    int getLastVisitedNodeIndex(){
+    int getLastVisitedNodeIndex() {
         int size = visitedNode.length();
-        if(size == 0)
+        if (size == 0)
             return -1;
         return visitedNode.getInt(size - 1);
 
@@ -142,8 +142,8 @@ public class ParserStatementGraph {
     }
 
 
-    String toStringWithDoubleQuotes(int index){
-        return "\"" + Integer.toString(index) + "\"";
+    String toStringWithDoubleQuotes(int index) {
+        return "\"" + index + "\"";
     }
 
 
@@ -168,14 +168,13 @@ public class ParserStatementGraph {
 //    }
 
 
-
     public JSONArray getVisitedNode() {
         return visitedNode;
     }
 
     public JSONArray getNodesData() {
         JSONArray nodesDataJSONArray = new JSONArray();
-        for(JSONObject jsonObject : nodesData) {
+        for (JSONObject jsonObject : nodesData) {
             nodesDataJSONArray.put(jsonObject);
         }
         return nodesDataJSONArray;
@@ -183,7 +182,7 @@ public class ParserStatementGraph {
 
     public JSONArray getConsumedTokens() {
         JSONArray consumedTokensJSON = new JSONArray();
-        for(Map.Entry<Integer, List<Integer>> entry : consumedTokens.entrySet()){
+        for (Map.Entry<Integer, List<Integer>> entry : consumedTokens.entrySet()) {
             JSONObject list = new JSONObject();
             list.put(Integer.toString(entry.getKey()), entry.getValue());
             consumedTokensJSON.put(list);

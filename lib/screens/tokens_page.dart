@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterdesktopapp/models/tokens.dart';
 import 'package:flutterdesktopapp/ui_elements/card_box.dart';
 import 'package:flutterdesktopapp/ui_elements/token_item.dart';
-import 'package:flutterdesktopapp/utils/app_data.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
-import 'package:provider/provider.dart';
+
 class TokensPage extends StatefulWidget {
   final int numberOfTokens;
 
@@ -15,7 +13,7 @@ class TokensPage extends StatefulWidget {
   _TokensPageState createState() => _TokensPageState();
 }
 
-class _TokensPageState extends State<TokensPage> with TickerProviderStateMixin{
+class _TokensPageState extends State<TokensPage> with TickerProviderStateMixin {
   AnimationController _animationController;
   double animationDuration;
   int durationOfSingleToken;
@@ -34,17 +32,16 @@ class _TokensPageState extends State<TokensPage> with TickerProviderStateMixin{
     _animationController.forward();
   }
 
+  @override
+  void dispose() {
+    print("Tokens Page Disposed");
+    _animationController.dispose();
+    super.dispose();
+  }
 
-@override
-void dispose() {
-  print("Tokens Page Disposed");
-  _animationController.dispose();
-  super.dispose();
-}
-
-@override
+  @override
   Widget build(BuildContext context) {
-   return Container(
+    return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -78,7 +75,8 @@ void dispose() {
             child: ListView.builder(
               itemCount: widget.numberOfTokens,
               itemBuilder: (context, index) {
-                return TokenItem(index, animationDuration, _animationController);
+                return TokenItem(
+                    index, animationDuration, _animationController);
               },
             ),
           )
