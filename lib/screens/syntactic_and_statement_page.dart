@@ -1,9 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterdesktopapp/ui_elements/single_graph.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:flutterdesktopapp/utils/graphs_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 class SyntacticPage extends StatefulWidget {
   final int numberOfGraphs;
@@ -49,6 +54,8 @@ class _StatementPageState extends State<StatementPage>
   int graphIndex = 0;
   Animation animation;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -89,6 +96,36 @@ class _StatementPageState extends State<StatementPage>
     super.dispose();
   }
 
+  ScreenshotController screenshotController = ScreenshotController();
+  int _counter = 0;
+  Uint8List _imageFile;
+
+  void _takeScreenshot(var context) {
+    screenshotController.capture().then((Uint8List image) async {
+      //Capture Done
+      setState(() {
+        _imageFile = image;
+        print("hi");
+      });
+
+      Directory directory = await getDownloadsDirectory();
+      String fileName = "Parsing Tree Statement #" +
+          widget.statementIndex.toString() +
+          ".png";
+      var p = directory.path;
+      var path = '$p';
+      print(path);
+      screenshotController.captureAndSave(path, fileName: fileName);
+      final snackBar = SnackBar(
+        content: Text('Graph is saved to $path'),
+      );
+      ;
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final graphProvider = Provider.of<GraphProvider>(context, listen: false);
@@ -101,20 +138,34 @@ class _StatementPageState extends State<StatementPage>
         children: [
           Expanded(
               flex: 1,
-              child: Center(
-                  child: Text("Parsing Tree", style: text_style_phase_title))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+              Text("Parsing Tree", style: text_style_phase_title),
+              SizedBox(
+                width: 10,
+              ),
+              IconButton(
+                icon: Icon(Icons.camera_alt),
+                onPressed: () => _takeScreenshot(context),
+              )
+                ],
+              )),
           Expanded(
             flex: 10,
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: SizedBox(
-                  height: 500000000,
-                  width: 500000000,
-                  child: Container(
-                    child: SingleGraph(graphIndex, widget.statementIndex,
-                        _animationController, animationDuration),
+                child: Screenshot(
+                  controller: screenshotController,
+                  child: SizedBox(
+                    height: 5000,
+                    width: 2000,
+                    child: Container(
+                      child: SingleGraph(graphIndex, widget.statementIndex,
+                          _animationController, animationDuration),
+                    ),
                   ),
                 ),
               ),

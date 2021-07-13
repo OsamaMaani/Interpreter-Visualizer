@@ -19,7 +19,8 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Interpreter Visualizer"),
+        toolbarHeight: 40,
+        title: Center(child: Text("Interpreter Visualizer", style: TextStyle(fontWeight: FontWeight.bold),)),
       ),
       body: Container(
         child: Row(

@@ -1,8 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterdesktopapp/utils/constants.dart';
 import 'package:flutterdesktopapp/utils/graphs_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import 'ast_graph.dart';
 
@@ -91,6 +96,37 @@ class _SemanticStatementPageState extends State<SemanticStatementPage>
     super.dispose();
   }
 
+
+  ScreenshotController screenshotController = ScreenshotController();
+  int _counter = 0;
+  Uint8List _imageFile;
+
+  void _takeScreenshot(var context) {
+    screenshotController.capture().then((Uint8List image) async {
+      //Capture Done
+      setState(() {
+        _imageFile = image;
+        print("hi");
+      });
+
+      Directory directory = await getDownloadsDirectory();
+      String fileName = "AST Tree Statement #" +
+          widget.statementIndex.toString() +
+          ".png";
+      var p = directory.path;
+      var path = '$p';
+      print(path);
+      screenshotController.captureAndSave(path, fileName: fileName);
+      final snackBar = SnackBar(
+        content: Text('Graph is saved to $path'),
+      );
+      ;
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final graphProvider = Provider.of<GraphProvider>(context, listen: false);
@@ -104,21 +140,32 @@ class _SemanticStatementPageState extends State<SemanticStatementPage>
         children: [
           Expanded(
               flex: 1,
-              child: Center(
-                  child: Text("Abstract Syntax Tree",
-                      style: text_style_phase_title))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Abstract Syntax Tree",
+                      style: text_style_phase_title),
+                  IconButton(
+                    icon: Icon(Icons.camera_alt),
+                    onPressed: () => _takeScreenshot(context),
+                  )
+                ],
+              )),
           Expanded(
             flex: 10,
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: SizedBox(
-                  height: 500000000,
-                  width: 500000000,
-                  child: Container(
-                    child: ASTGraph(stepIndex, widget.statementIndex,
-                        _animationController, animationDuration),
+                child: Screenshot(
+                  controller: screenshotController,
+                  child: SizedBox(
+                    height: 3000,
+                    width: 2000,
+                    child: Container(
+                      child: ASTGraph(stepIndex, widget.statementIndex,
+                          _animationController, animationDuration),
+                    ),
                   ),
                 ),
               ),

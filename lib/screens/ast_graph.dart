@@ -83,7 +83,7 @@ class _ASTGraphState extends State<ASTGraph> {
         showOutput = false;
       }
     });
-    
+
     return DirectGraph(
       list: graph,
       cellWidth: 180.0,

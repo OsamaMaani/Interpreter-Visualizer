@@ -36,7 +36,7 @@ public class WebController {
     @RequestMapping("/interpreter/semantic")
     public String semanticAnalysis(@RequestParam(value = "token") String token) {
         System.out.println("Semantic Analysis Requested!");
-        return interpreterAdapter.getSemanticAnalysis(token).toString();
+                return interpreterAdapter.getSemanticAnalysis(token).toString();
     }
 
     @RequestMapping(value = "/interpreter/sourcecode", method = RequestMethod.POST)
