@@ -1,1 +1,2 @@
-# Interpreter Visualizer
+## Interpreter Visualizer 
+Believing in visualization as a very interactive method to help enhance and improve education, We have developed this very new desktop application to help and inspire Compiler Design learners so that they get a better experience and understand it well. We also want to inspire other programmers around the world to help create more educational applications or improve the already existing ones.
