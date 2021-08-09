@@ -13,7 +13,7 @@ If you're new to open source, read [this article](https://dvmhmdsd.me/blog/open-
 # Required Steps to follow to make your PR accepted and merged
 1. Take care about Encapsulation rules.
 2. The names of functions, variables, components and classes should be descriptive 
-and be according to the Dart [Naming Conventions](https://dart.dev/guides/language/effective-dart/style).
+and be according to the Dart [Naming Conventions](https://dart.dev/guides/language/effective-dart/style) and the Java [Naming Conventions](https://www.javatpoint.com/java-naming-conventions). 
 3. No unnecessary comments.
 4. No warnings on the console or the terminal (always lint your code).
 
