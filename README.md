@@ -50,7 +50,7 @@ Also, an immediate message in the **console** appears to indicate that error.
 
 In this example you can see the panel is divided into two smaller panels, the right one to show how the interpreter recursively search the grammar to find the specific grammar of the expression creating **the Parsing Tree** and on the left you can see the **Abstract Syntax Tree**(AST). 
 You can also see a camera icon beside the title in each panel and if it is clicked it will immediately generate a screenshot to either the parsing tree or the AST to the moment you clicked. 
-![Lexical Analysis](Peek-hello-parsing.gif)
+![Lexical Analysis](Peek-parsing.gif)
 
 **Example Four**
 
