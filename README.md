@@ -24,6 +24,13 @@ Have a look at the language simple grammar [here](LoxGrammar). **We have not imp
 ### How to use
 <a name = "install"></a>
 This application consists of two separate parts the desktop/web front-end part which is written in Flutter and the back-end side written in Java Spring. The back-end side is found in the folder **InterpreterVisualizer**.
+Make sure to:
+
+1- Use the same port and IP address for both the back-end side and the fron-end side and you can modify that in the [properties file](https://github.com/OsamaMaani/Interpreter-Visualizer/blob/master/InterpreterVisualizer/src/main/resources/application.properties) in the back-end project and you can modify that in the [networking file](https://github.com/OsamaMaani/Interpreter-Visualizer/blob/master/lib/services/networking.dart) in the Flutter project.
+
+2- Modify the graphite library so that it works properly for  the project. You will head to the external libraries in the flutter project and then you will find graphite library folder, you will then open **graphite_edges.dart** and then go to  **_GraphiteEdgesState** class and then head to **InteractiveViewer** widget and add **scaleEnabled: false**. This attribute will make sure that the zooming in the screen is off and there will not be unexpected functionalities caused by the zooming.
+
+![add](graphite_modify.png).
 
 ### Examples
 <a name = "ex"></a>
@@ -41,8 +48,9 @@ Also, an immediate message in the **console** appears to indicate that error.
 
 **Example Three**
 
-In this example you can see the panel is divided into two smaller panels, the right one to show how the interpreter recursively search the grammar to find the specific grammar of the expression creating **the Parsing Tree** and on the left you can see the **Abstract Syntax Tree**(AST). You can also see a camera icon beside the title in each panel and if it is clicked it will immediately generate a screenshot to either the parsing tree or the AST to the moment you clicked. 
-![Lexical Analysis](Peek-parsing.gif)
+In this example you can see the panel is divided into two smaller panels, the right one to show how the interpreter recursively search the grammar to find the specific grammar of the expression creating **the Parsing Tree** and on the left you can see the **Abstract Syntax Tree**(AST). 
+You can also see a camera icon beside the title in each panel and if it is clicked it will immediately generate a screenshot to either the parsing tree or the AST to the moment you clicked. 
+![Lexical Analysis](Peek-hello-parsing.gif)
 
 **Example Four**
 
