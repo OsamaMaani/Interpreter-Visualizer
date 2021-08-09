@@ -8,9 +8,7 @@ public class InterpreterVisualizerAPI {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(InterpreterVisualizerAPI.class, args
-
-        );
+        SpringApplication.run(InterpreterVisualizerAPI.class, args);
     }
 
 }
