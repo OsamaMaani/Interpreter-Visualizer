@@ -13,7 +13,7 @@ Believing in visualization as a very interactive method to help enhance and impr
 <a name = "idea"></a>
 ### Idea of the project
 
-This application simply visualizes the front-end part of interpreters or compilers and that includes Lexical Analysis, Syntactic Analysis and Semantic analysis.
+This application simply visualizes the front-end part of interpreters or compilers and that includes Lexical Analysis, Syntactic Analysis and Semantic analysis.<br />
 By using this application you will be able to:<br />
 1- Visualize any part of your code in the front-end part of an interpreter or a compiler.<br />
 2- Try and error your understanding of the compiler theory subject.<br />
