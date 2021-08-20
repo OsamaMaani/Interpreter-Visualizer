@@ -4,7 +4,7 @@ Believing in visualization as a very interactive method to help enhance and impr
 By using this application you will be able to:<br />
 1- Visualize any part of your code in the front-end part of an interpreter or a compiler.<br />
 2- Try and error your understanding of the compiler theory subject.<br />
-3- Know where your code can fail in the fron-end part.<br />
+3- Know where your code can fail in the front-end part.<br />
 4- Use it as a professor in the university or in the lab class to help you deliver your lectures the best way possible.<br />
 
 ## Table of content:
