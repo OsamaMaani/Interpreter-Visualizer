@@ -20,10 +20,13 @@ You can use this application as a compiler design teacher or as a student to hel
 This programming laguage is the one used in our application to be visualized. It is an educational language created by [Robert Nystrom](https://github.com/munificent) in his famous book [Crafting interpreters](https://craftinginterpreters.com/contents.html) which we have used to help us create its interpreter. The reason we chose this language is that it is very simple, a C-style language and its grammar is very easy to read through. But our project does not only visualize Lox, **it can actually visaulize any programming language**, but you will need to change the back-end side of the project but the front-end will just work the same.
 Have a look at the language simple grammar [here](LoxGrammar). **We have not implemented yet all the grammar included in the crafting interpreters book**.
 
+You may also check some examples and learn more about the syntax of the language from [here](https://craftinginterpreters.com/the-lox-language.html). But notice that we have only implemented what you will find in the [grammar file](LoxGrammar), some parts of the language like the OOP or the functions are not implemented yet. So, if you doubt any part of the language to use just check the [grammar file](LoxGrammar).
+
 
 ### How to use
 <a name = "install"></a>
-This application consists of two separate parts the desktop/web front-end part which is written in Flutter and the back-end side written in Java Spring. The back-end side is found in the folder **InterpreterVisualizer**.
+This application consists of two separate parts the desktop/web front-end part which is written in Flutter and the back-end side written in Java Spring. The back-end side is found in the folder [**InterpreterVisualizer**](https://github.com/OsamaMaani/Interpreter-Visualizer/tree/master/InterpreterVisualizer).
+
 Make sure to:
 
 1- Use the same port and IP address for both the back-end side and the fron-end side and you can modify that in the [properties file](https://github.com/OsamaMaani/Interpreter-Visualizer/blob/master/InterpreterVisualizer/src/main/resources/application.properties) in the back-end project and you can modify that in the [networking file](https://github.com/OsamaMaani/Interpreter-Visualizer/blob/master/lib/services/networking.dart) in the Flutter project.
