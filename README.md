@@ -9,22 +9,23 @@ Believing in visualization as a very interactive method to help enhance and impr
 5. [Depedencies](#Depend)
 6. [Contribution](#con)
 
-### Idea of the project
 <a name = "idea"></a>
+### Idea of the project
+
 This application simply visualizes the front-end part of interpreters or compilers and that includes Lexical Analysis, Syntactic Analysis and Semantic analysis.
 You can use this application as a compiler design teacher or as a student to help visualize the whole process and examine your understanding to the subject. Also, it can help you understand where your error in the code fail the interpreter to work. 
 
-
-### Lox Language
 <a name = "lox"></a>
+### Lox Language
+
 This programming laguage is the one used in our application to be visualized. It is an educational language created by [Robert Nystrom](https://github.com/munificent) in his famous book [Crafting interpreters](https://craftinginterpreters.com/contents.html) which we have used to help us create its interpreter. The reason we chose this language is that it is very simple, a C-style language and its grammar is very easy to read through. But our project does not only visualize Lox, **it can actually visaulize any programming language**, but you will need to change the back-end side of the project but the front-end will just work the same.
 Have a look at the language simple grammar [here](LoxGrammar). **We have not implemented yet all the grammar included in the crafting interpreters book**.
 
 You may also check some examples and learn more about the syntax of the language from [here](https://craftinginterpreters.com/the-lox-language.html). But notice that we have only implemented what you will find in the [grammar file](LoxGrammar), some parts of the language like the OOP or the functions are not implemented yet. So, if you doubt any part of the language to use just check the [grammar file](LoxGrammar).
 
-
-### How to use
 <a name = "install"></a>
+### How to use
+
 This application consists of two separate parts the desktop/web front-end part which is written in Flutter and the back-end side written in Java Spring. The back-end side is found in the folder [**InterpreterVisualizer**](https://github.com/OsamaMaani/Interpreter-Visualizer/tree/master/InterpreterVisualizer).
 
 Make sure to:
@@ -35,8 +36,9 @@ Make sure to:
 
 ![add](graphite_modify.png).
 
-### Examples
 <a name = "ex"></a>
+### Examples
+
  
  **Example One**
  
@@ -64,9 +66,9 @@ In this example you can see the semantic analysis visualization including the sy
 Here, in this example you can see how the semantic analysis phase can produce output in the **console** using print expression.
 ![Lexical Analysis](peek-hello-semantic.gif)
 
-
-### Dependencies
 <a name = "Depend"></a>
+### Dependencies
+
 The Dependencies used in the Flutter Desktop/Web app.
 1. [HTTP package](https://pub.dev/packages/http)
 2. [Provider Package](https://pub.dev/packages/provider) 
@@ -79,9 +81,9 @@ The Dependencies used in the Java Spring back-end app.
 
 1- [JSON](https://mvnrepository.com/artifact/org.json/json/20090211)
 
-
-## Contribution
 <a name= "con"></a>
+## Contribution
+
 Follow the guides mentioned in the [CONTRIBUTING.md](contribution.md).
 
 
