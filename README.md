@@ -1,6 +1,12 @@
 # Interpreter Visualizer 
 Believing in visualization as a very interactive method to help enhance and improve education, We have developed this very new desktop application to help and inspire Compiler Design learners so that they get a better experience and understand it well. We also want to inspire other programmers around the world to help create more educational applications or improve the already existing ones.
 
+By using this application you will be able to:<br />
+1- Visualize any part of your code in the front-end part of an interpreter or a compiler.<br />
+2- Try and error your understanding of the compiler theory subject.<br />
+3- Know where your code can fail in the fron-end part.<br />
+4- Use it as a professor in the university or in the lab class to help you deliver your lectures the best way possible.<br />
+
 ## Table of content:
 1. [Idea of the project](#idea) 
 2. [Lox Language](#lox)
