@@ -11,9 +11,10 @@ Believing in visualization as a very interactive method to help enhance and impr
 6. [Depedencies](#Depend)
 7. [Contribution](#con)
 
-<a name = "idea"></a>
+<a name = "note"></a>
 ### Important Note
 When talking about the interpreter if we mention the front-end part and the back-end part we mean by the front-end the lexical analysis, the syntactic analysis and the semantic analysis(The part of the interperter we have made it possible to visualize). And if we are talking about the project as a code we mean by the front-end the Flutter project and the back-end is the Java Spring project. So, these terms are similar but their meaning is way too different so don't mix them up.  
+
 <a name = "idea"></a>
 ### Idea of the project
 
